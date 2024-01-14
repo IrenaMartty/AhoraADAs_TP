@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind link -->
+
+    <title>Document</title>
+</head>
+<body>
+    <script src="main.js"></script>
+</body>
+    <!-- Header -->
+    <header class="flex flex-col">
+        <nav class="nav-bar bg-[#56d8ac] p-6 text-white flex justify-between max-lg:p-2">
+            <div class="logo-nav-bar">
+                    <h1 class="logo-titulo text-white font-medium text-[36px] max-lg:text-[30px]">
+                        <i class="fa-solid fa-wallet mr-2"></i>
+                        AhorrADAs
+                    </h1>
+            </div>
+            <div class="nav-menu" >
+                    <ul class="nav-elemento pt-3 max-lg:hidden size-full flex flex-row ">
+                    <li>
+                        <button class="nav-elemento mr-5 p-2 hover:bg-[#31C594] rounded-md" id="balance-sheet">
+                            <i class="fa-solid fa-chart-line mr-2"></i>
+                            Balance
+                    </button>
+                   </li>
+                    <li>
+                        <button class="nav-elemento mr-5 p-2 hover:bg-[#31C594] rounded-md" id="categorias-sheet">
+                            <i class="fa-solid fa-tag mr-2"></i>
+                            Categorías
+                        </button>
+                    </li>
+                    <li>
+                        <button href="" class="nav-elemento mr-5 p-2 hover:bg-[#31C594] rounded-md" id="reportes-sheet">
+                            <i class="fa-solid fa-chart-pie mr-2"></i>
+                            Reportes
+                        </button>
+                    </li>
+                </ul>
+            </div>
+                <button class="nav-elemento menu-hamburgesa lg:hidden max-lg:p-2 hover:bg-[#31C594] rounded-md">
+                    <i class="fa-solid fa-bars"></i>
+                    <i class="fa-solid fa-xmark hidden"></i>
+                </button>  
+        </nav>
+        <div class="dropdown-menu drop-shadow-md bg-white lg:hidden flex flex-col justify-items-start hidden">
+            <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left" id="balance-sheet-drop">
+                <i class="fa-solid fa-chart-line mr-2"></i>
+                Balance
+            </button>
+            <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left" id="categorias-sheet-drop">
+            <i class="fa-solid fa-tag mr-2"></i>
+            Categorías
+            </button>
+            <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left" id="reportes-sheet-drop">
+                <i class="fa-solid fa-chart-pie mr-2"></i>
+                Reportes
+            </button>
+    
+        </div>   
+        </header>
+</html>
