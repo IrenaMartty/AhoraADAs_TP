@@ -1,7 +1,5 @@
 /* UTILITIES */
 
-
-
 const $ = (selector) => document.querySelector(selector)
 const $$ = (selector) => document.querySelectorAll(selector)
 
@@ -96,8 +94,8 @@ const renderOperations = (operations) => {
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
             <td class="sm:pr-6 text-left">${operation.amount}</td>
             <td>
-                <button class="containerEditOperation-btn text-teal-500 hover:text-black" data-id onclick="editForm('${operation.id}')">Editar</i></button>
-                <button type="button" class="btn removeOperation-btn text-teal-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</i></button>
+                <button class="containerEditOperation-btn text-sky-500 hover:text-black" data-id onclick="editForm('${operation.id}')">Editar</i></button>
+                <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</i></button>
             </td>
         </tr>
         `
@@ -185,6 +183,46 @@ const deleteOperation = (operationId) => {
 
 }
 
+// Balance calculation
+const operations = getData("operations");
+console.log("Operations Data:", operations)
+
+// Total income
+const calculateIncome = () => {
+    const operations = getData("operations")
+    let acc = 0
+    for (const operation of operations) {
+        if (operation.type === "ganancia") {
+            acc += operation.amount
+    }
+
+}
+console.log("Total Income:", acc)
+    return acc
+
+}
+
+// Total cost
+const calculateCost = () => {
+    const operations = getData("operations")
+    let acc = 0
+    for (const operation of operations) {
+        if (operation.type === "gasto") {
+            acc -= operation.amount
+        }
+    }
+    console.log("Total Cost:", acc)
+    return acc
+}
+
+// Total calculation
+const totalCalc = () => {
+    const income = calculateIncome()
+    const cost = calculateCost()
+    const total = cost + income
+    return total
+}
+
 /* EVENTS */
 
 const initializeApp = () => {
@@ -192,6 +230,11 @@ const initializeApp = () => {
 //     setData("categories", allCategories)
     renderOperations(allOperations) 
 //     addNewCategory(allCategories)
+$("#income").innerText = calculateIncome()
+$("#cost").innerText = calculateCost()
+$("#total").innerText = totalCalc()
+
+
 
 // Navigation Buttons - Header buttons
 
