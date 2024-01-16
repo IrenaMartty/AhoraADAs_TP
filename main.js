@@ -22,16 +22,93 @@ const cleanContainer = (selector) => $(selector).innerHTML = ""
 const getData = (key) => JSON.parse(localStorage.getItem(key))
 const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data))
 
+// CATEGORIES
 
-// OPERATIONS
+// Default categories
+
+const defaultCategory = [
+    {
+        id: randomId(),
+        category: "Comida"
+    },
+    {
+        id: randomId(),
+        category: "Salidas"
+    },
+    {
+        id: randomId(),
+        category: "Educación"
+    },
+    {
+        id: randomId(),
+        category: "Transporte"
+    },
+    {
+        id: randomId(),
+        category: "Trabajo"
+    },
+    ]
 
 const allOperations = getData("operations") || []
-// const allCategories = getData("categories") || data
+const allCategories = getData("categories") || defaultCategory
 
+console.log(defaultCategory)
+
+
+// Add category
+const getCategoryById = (categoryId) => getCategories().find(({id}) => id === categoryId)
+
+
+const addCategory = () => {
+    const categoryName = $("#input-add-category").value
+    if(categoryName) {
+        const newCategory = {
+            id: randomId(),
+            category: categoryName
+        }
+        const updateCategories = [...getCategories(), newCategory]
+        updateData(updateCategories, getOperations())
+        $("#input-add-category").value = "" 
+    } else {
+      return `error`
+    }
+}
+
+//  Render categories
+
+const renderCategories = (categories) => {
+    cleanContainer("#categories-list")
+    for (const category of categories) {
+        $("#categories-list").innerHTML += `
+        <tr>
+        <td>${category.category}</td>
+        <td>
+        <button type="button" class="btn-edit-category">Editar</button>
+        <button type="button" class="btn-delete-category" onclick="deleteAction('${category.id}')">Eliminar</button>
+        </td>
+        `
+    }
+}
+
+const renderCategoryOptions = (categories) => {
+    for (const category of categories) {
+        $("#select-category").innerHTML += `
+        <option value="${category.id}">${category.category}</option>
+        `
+        $("#form-select-category").innerHTML += `
+        <option value="${category.id}">${category.category}</option>
+        `
+        
+    }
+}
+
+
+// OPERATIONS
 
 //  Add New Operation
 
 const getOperationById = (operationId) => getOperations().find(({id}) => id === operationId)
+
 
 
 const saveOperation = () => {
@@ -227,9 +304,9 @@ const totalCalc = () => {
 
 const initializeApp = () => {
     setData("operations", allOperations) 
-//     setData("categories", allCategories)
+    setData("categories", allCategories)
     renderOperations(allOperations) 
-//     addNewCategory(allCategories)
+    addCategory(allCategories)
 $("#income").innerText = calculateIncome()
 $("#cost").innerText = calculateCost()
 $("#total").innerText = totalCalc()
@@ -337,6 +414,20 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
             window.location.reload()
         }
     })
+
+    // Add category
+
+    $("#btn-add-categories").addEventListener("click", (e) => {
+            e.preventDefault()
+            addCategory()
+            $(".input-add-category").reset()
+        }) 
+
+    // $("#btn-submit").addEventListener("click", (e) => {
+    //     e.preventDefault()
+    //     addUser()
+    //     $(".form").reset()
+    // })
 
 
 }
