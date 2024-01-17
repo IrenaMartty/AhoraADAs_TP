@@ -133,13 +133,13 @@
                         </li>
 
                         <li class="filtros-section-day mb-2 md:mb-4 flex flex-col flex-col ">
-                            <label for="since-filter">Desde</label>
+                            <label for="pick-day">Desde</label>
                             <input type="date" id="pick-day" class="pick-day p-2 border-slate-200 border-2  rounded-md ">
                         </li>
 
                         <li class="filtros-section-order mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-order">Ordenar por</label>
-                            <select id="form-select-category" class="form-select-order p-2 border-slate-200 border-2 rounded-md ">
+                            <select id="form-select-order" class="form-select-order p-2 border-slate-200 border-2 rounded-md ">
                                 <option>Mas reciente</option>
                                 <option>Menos reciente</option>
                                 <option>Mayor monto</option>
@@ -220,12 +220,6 @@
 
             <label for="select-category" class="font-bold">Categoria</label>
             <select class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" id="select-category" required>
-                <option>Comida</option>
-                <option>Servicios</option>
-                <option>Salidas</option>
-                <option>Educación</option>
-                <option>Transporte</option>
-                <option>Trabajo</option>
             </select>
 
             <label for="op-input-date" class="font-bold">Fecha</label>
@@ -268,19 +262,20 @@
             <div class="">
                 <h2 class="text-[3rem] mb-[1rem]">Categorías</h2>
 
+                <form id="category-form">
                     <div class="mb-[0.5rem]">
-                        <label for="input-add" class="text-xl font-bold mt-5">Nombre </label>
+                        <label for="input-add-category" class="text-xl font-bold mt-5">Nombre </label>
                     </div>
-
+            
                     <div class="w-[100%] flex justify-between">
-
                         <input name="input-add-category" id="input-add-category" type="text"
                             class="w-[85%] p-[0.5rem] rounded-[0.3rem] border-inherit border-[0.1rem] hover:border-gray-400">
-                            <p class="text-red-600 hidden" id="errorNewCategory">Este campo es obligatorio</p>
-
+                        <p class="text-red-600 hidden" id="errorNewCategory">Este campo es obligatorio</p>
+            
                         <button type="button" id="btn-add-categories"
-                                    class=" h-[2.7rem] bg-[#55d8ac] px-6 ms-2 rounded-[0.3rem] text-white">Agregar</button>
+                            class="h-[2.7rem] bg-[#55d8ac] px-6 ms-2 rounded-[0.3rem] text-white">Agregar</button>
                     </div>
+                </form>
 
             </div>
 
@@ -289,6 +284,9 @@
             </div>
 
             <div id="categories-list" class="categories-list mt-7">
+                <table class="table-categoriesRender w-full">
+                    <tbody class="tbody-category-render text-left"></tbody>
+                </table>
             </div>
 
         </section>
@@ -298,8 +296,8 @@
         <div>
             <div class="flex flex-col">
                 <h2 class="text-[3rem] mb-[1rem]">Editar categoría</h2>
-                <label for="editCategoryName" class="text-xl font-bold mt-5">Nombre</label>
-                <input type="text" id="editCategoryName" class="w-full p-[0.5rem] rounded-[0.3rem] border-inherit border-[0.1rem] hover:border-gray-400">
+                <label for="editCategory" class="text-xl font-bold mt-5">Nombre</label>
+                <input type="text" id="editCategory" class="w-full p-[0.5rem] rounded-[0.3rem] border-inherit border-[0.1rem] hover:border-gray-400">
                 <p class="text-red-600 hidden" id="errorEditCategory">Este campo es obligatorio</p>
             </div>
             <div class="flex justify-end mt-7 md:mt-14">

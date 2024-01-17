@@ -1,5 +1,8 @@
 /* UTILITIES */
 
+const getData = (key) => JSON.parse(localStorage.getItem(key))
+const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data))
+
 const $ = (selector) => document.querySelector(selector)
 const $$ = (selector) => document.querySelectorAll(selector)
 
@@ -19,73 +22,58 @@ const hideElement = (selectors) => {
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
 
-const getData = (key) => JSON.parse(localStorage.getItem(key))
-const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data))
+
 
 // CATEGORIES
 
+const getCategoryNameById = (categoryId) => {
+    const categorySelected = getCategories().find(({id}) => id === categoryId)
+    return categorySelected ? categorySelected.name : ''
+}
 // Default categories
 
 const defaultCategory = [
     {
         id: randomId(),
-        category: "Comida"
+        name: "Comida"
     },
     {
         id: randomId(),
-        category: "Salidas"
+        name: "Salidas"
     },
     {
         id: randomId(),
-        category: "Educación"
+        name: "Educación"
     },
     {
         id: randomId(),
-        category: "Transporte"
+        name: "Transporte"
     },
     {
         id: randomId(),
-        category: "Trabajo"
-    },
-    ]
+        name: "Trabajo"
+    }
+]
+
 
 const allOperations = getData("operations") || []
-const allCategories = getData("categories") || defaultCategory
+const allCategoriesData = getData("categories") || {}
+const allCategories = allCategoriesData.defaultCategory || defaultCategory
 
-console.log(defaultCategory)
-
-
-// Add category
-const getCategoryById = (categoryId) => getCategories().find(({id}) => id === categoryId)
-
-
-const addCategory = () => {
-    const categoryName = $("#input-add-category").value
-    if(categoryName) {
-        const newCategory = {
-            id: randomId(),
-            category: categoryName
-        }
-        const updateCategories = [...getCategories(), newCategory]
-        updateData(updateCategories, getOperations())
-        $("#input-add-category").value = "" 
-    } else {
-      return `error`
-    }
-}
 
 //  Render categories
 
 const renderCategories = (categories) => {
-    cleanContainer("#categories-list")
-    for (const category of categories) {
-        $("#categories-list").innerHTML += `
-        <tr>
-        <td>${category.category}</td>
-        <td>
-        <button type="button" class="btn-edit-category">Editar</button>
-        <button type="button" class="btn-delete-category" onclick="deleteAction('${category.id}')">Eliminar</button>
+    cleanContainer(".tbody-category-render")
+    for (const category of categories){
+        $(".tbody-category-render").innerHTML += `
+        <tr class="">
+        <td class="text-emerald-600 rounded">${category.name}</td>
+        <td class="text-right">
+        <button type="button" class="btn-edit-category category-id text-sky-500 hover:text-black">Editar</button>
+        <button type="button" class="btn-delete-category category-idtext-sky-500 hover:text-black">Eliminar</button>
         </td>
+        <tr>
         `
     }
 }
@@ -93,14 +81,47 @@ const renderCategories = (categories) => {
 const renderCategoryOptions = (categories) => {
     for (const category of categories) {
         $("#select-category").innerHTML += `
-        <option value="${category.id}">${category.category}</option>
+        <option value="${category.id}">${category.name}</option>
         `
         $("#form-select-category").innerHTML += `
-        <option value="${category.id}">${category.category}</option>
+        <option value="${category.id}">${category.name}</option>
         `
         
     }
 }
+
+const getCategories = () => getData("categories") || [];
+
+// Add category
+const addCategory = () => {
+    const categoryName = $("#input-add-category").value;
+    if (categoryName) {
+        const newCategory = {
+            id: randomId(),
+            name: categoryName
+        };
+        const updatedCategories = [...getCategories(), newCategory]
+        setData("categories", updatedCategories)
+        $("#input-add-category").value = ""
+
+        renderCategories(updatedCategories)
+        renderCategoryOptions(updatedCategories)
+        
+    } else {
+        return `error`;
+    }
+}
+
+//Edit Category
+
+const editCategory = (categoryId) => {
+    return {
+        id: categoryId,
+        name: $("#editCategory").value
+    }
+
+}
+
 
 
 // OPERATIONS
@@ -132,7 +153,7 @@ const showOperations = (arrayOperations) => {
     const categoryName = (idCategory) => {
         for(const category of getData("categories")){
           if(idCategory === category.id){
-            return(category.category)
+            return(category.name)
           }
         }
       }
@@ -143,15 +164,14 @@ const showOperations = (arrayOperations) => {
    `<tr>
         <td class="text-center border-r-6 p-3max-w-[150px]">${operation.description}</td>
         <td class="text-center border-r-6 p-3">
-            <p class="bg-slate-300 text-center rounded-md">${categoryName(operation.categoria)}</p>
+            <p class="bg-slate-300 text-center rounded-md">${categoryName(operation.category)}</p>
          </td>
         <td class="text-center border-r-6 p-3">${operation.day}</td>
         <td class="text-center border-r-6 p-3" id="num-amount">${operation.amount}</td>
         <td class="p-3 flex flex-col">
-            <button class="bg-slate-300 text-center mb-1 border-r-6 rounded-md" onclick="ejecutionOfNewOp('${operation.id}')">Editar</button>
-            <button class="bg-slate-300 text-center border-r-6 rounded-md" onclick="ejecutionDeleteBtn('${operation.id}', '${operation.description}')">Eliminar</button>
+            <button class="bg-slate-300 text-center mb-1 border-r-6 rounded-md" >Editar</button>
+            <button class="bg-slate-300 text-center border-r-6 rounded-md" '${operation.description}')">Eliminar</button>
         </td>
-    </tr>
     <tr class="m-28 border-2 border-slate-300"></tr> 
     `
   }
@@ -306,7 +326,9 @@ const initializeApp = () => {
     setData("operations", allOperations) 
     setData("categories", allCategories)
     renderOperations(allOperations) 
-    addCategory(allCategories)
+    renderCategories(allCategories)
+    renderCategoryOptions(allCategories)
+    // addCategory(allCategories)
 $("#income").innerText = calculateIncome()
 $("#cost").innerText = calculateCost()
 $("#total").innerText = totalCalc()
@@ -420,15 +442,17 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     $("#btn-add-categories").addEventListener("click", (e) => {
             e.preventDefault()
             addCategory()
-            $(".input-add-category").reset()
+            $("#category-form").reset()
         }) 
 
-    // $("#btn-submit").addEventListener("click", (e) => {
-    //     e.preventDefault()
-    //     addUser()
-    //     $(".form").reset()
-    // })
+ 
+
+
+    
+    
 
 
 }
+
+
 window.addEventListener("load", initializeApp)
