@@ -445,12 +445,40 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
             $("#category-form").reset()
         }) 
 
- 
+    // Edit category
+
+    const editCategoryButtons = document.querySelectorAll(".btn-edit-category")
+
+     editCategoryButtons.forEach(button => {
+         button.addEventListener("click", () => {
+            hideElement([".categories-container"])
+            showElement(["#containerEditCategory"])
+
+     })
+
+    }) 
+// cancel edit
+    $("#EditCancelButton").addEventListener("click", () => {
+        showElement([".categories-container"])
+        hideElement(["#containerEditCategory"])
+    }) 
 
 
+// edit confirmation button
     
-    
+     // Delete category
 
+const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
+
+     deleteCategoryButtons.forEach(button => {
+         button.addEventListener("click", () => {
+            showElement(["#removeCategoryConfirmation"])
+
+     })
+    }) 
+    $(".btn-cancel-delete").addEventListener("click", () => {
+        hideElement(["#removeCategoryConfirmation"])
+    }) 
 
 }
 
