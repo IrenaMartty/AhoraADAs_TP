@@ -207,10 +207,13 @@
             <label for="input-description-text" class="font-bold">Descripcion</label>
             <input type="text" id="input-description-text" class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" name="description"
                 placeholder="Descripcion" required>
+                <p class="error-message-description text-right text-rose-500 hidden"><i class="fa-solid fa-triangle-exclamation"></i> El campo de descripcion no puede estar vacío</p>
 
             <label for="input-amount" class="font-bold">Monto</label>
             <input type="number" id="input-amount" class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" name="amount"
-                placeholder="Monto" required>
+                placeholder="Monto" required min="0">
+                <p class="error-message-monto text-right text-rose-500 hidden"><i class="fa-solid fa-triangle-exclamation"></i> El campo de monto no puede estar vacío</p>
+
 
             <label for="select-type" class="font-bold">Tipo</label>
             <select class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" id="select-type" required>
@@ -220,11 +223,20 @@
 
             <label for="select-category" class="font-bold">Categoria</label>
             <select class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" id="select-category" required>
+
+                                <option>Comida</option>
+                                <option>Servicios</option>
+                                <option>Salidas</option>
+                                <option>Educación</option>
+                                <option>Transporte</option>
+                                <option>Trabajo</option>
             </select>
 
             <label for="op-input-date" class="font-bold">Fecha</label>
             <input type="date" id="op-input-date" class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" name="date" placeholder="Fecha"
                 required>
+                <p class="error-message-date text-right text-rose-500 hidden"><i class="fa-solid fa-triangle-exclamation"></i> Por favor elige una fecha</p>
+
         </form>
         <div class="w-full flex justify-end">
             <div class="options-newOperation">
@@ -279,7 +291,7 @@
 
             </div>
 
-            <div id="error-message" class="hidden text-red-600">
+            <div id="error-message" class="hidden text-rose-500">
                 El nombre de la categoría no puede estar vacío.
             </div>
 

@@ -70,8 +70,8 @@ const renderCategories = (categories) => {
         <tr class="">
         <td class="text-emerald-600 rounded">${category.name}</td>
         <td class="text-right">
-        <button type="button" class="btn-edit-category category-id text-sky-500 hover:text-black">Editar</button>
-        <button type="button" class="btn-delete-category category-idtext-sky-500 hover:text-black">Eliminar</button>
+        <button type="button" class="btn-edit-category data-id text-sky-500 hover:text-black">Editar</button>
+        <button type="button" class="btn-delete-category text-sky-500 hover:text-black data-id onclick="ejecutionDeleteCategoryBtn('${category.id}','${category.name}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</button>
         </td>
         <tr>
         `
@@ -90,16 +90,16 @@ const renderCategoryOptions = (categories) => {
     }
 }
 
-const getCategories = () => getData("categories") || [];
+const getCategories = () => getData("categories") || []
 
 // Add category
 const addCategory = () => {
-    const categoryName = $("#input-add-category").value;
+    const categoryName = $("#input-add-category").value
     if (categoryName) {
         const newCategory = {
             id: randomId(),
             name: categoryName
-        };
+        }
         const updatedCategories = [...getCategories(), newCategory]
         setData("categories", updatedCategories)
         $("#input-add-category").value = ""
@@ -108,19 +108,37 @@ const addCategory = () => {
         renderCategoryOptions(updatedCategories)
         
     } else {
-        return `error`;
+        return `error`
     }
 }
 
 //Edit Category
 
-const editCategory = (categoryId) => {
-    return {
-        id: categoryId,
-        name: $("#editCategory").value
-    }
+// const editCategory = (categoryId) => {
+//     return {
+//         id: categoryId,
+//         name: $("#editCategory").value
+//     }
 
-}
+// }
+
+// Delete Category
+
+// const ejecutionDeleteCategoryBtn = (categoryId) => {
+//     $(".btn-remove-categories").setAttribute("data-id", categoryId)
+//     $("#btn-remove-categories").addEventListener("click", () => {
+//         const categoryId = $("#btn-remove-categories").getAttribute("data-id")
+//         deleteCategory(categoryId)
+//         renderCategories(getData("categories"))
+//     })
+// }
+
+// const deleteCategory = (categoryId) => {
+//     const currentData = getData("categories").filter(category => category.id != categoryId)
+//     setData("categories", currentData)
+//     // window.location.reload()
+
+// }
 
 
 
@@ -146,8 +164,8 @@ const saveOperation = () => {
 const showOperations = (arrayOperations) => {
     $(".tbody-info-render").innerHTML = "" 
         if (!(arrayOperations.length > 0)) {
-            $(".operaciones-container").classList.remove("hidden");
-            $(".operaciones-table-container").classList.add("hidden");
+            $(".operaciones-container").classList.remove("hidden")
+            $(".operaciones-table-container").classList.add("hidden")
          }
 
     const categoryName = (idCategory) => {
@@ -192,7 +210,7 @@ const renderOperations = (operations) => {
             <td class="sm:pr-6 text-left">${operation.amount}</td>
             <td>
                 <button class="containerEditOperation-btn text-sky-500 hover:text-black" data-id onclick="editForm('${operation.id}')">Editar</i></button>
-                <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</i></button>
+                <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</button>
             </td>
         </tr>
         `
@@ -268,20 +286,20 @@ const ejecutionDeleteBtn = (operationId) => {
     $("#btn-remove-operations").setAttribute("data-id", operationId)
     $("#btn-remove-operations").addEventListener("click", () => {
         const operationId = $("#btn-remove-operations").getAttribute("data-id")
-        deleteOperation(operationId);
+        deleteOperation(operationId)
         showOperations(getData("operations"))
     })
 }
 
 const deleteOperation = (operationId) => {
-    const currentData = getData("operations").filter(operation => operation.id != operationId);
-    setData("operations", currentData);
+    const currentData = getData("operations").filter(operation => operation.id != operationId)
+    setData("operations", currentData)
     window.location.reload()
 
 }
 
 // Balance calculation
-const operations = getData("operations");
+const operations = getData("operations")
 console.log("Operations Data:", operations)
 
 // Total income
@@ -319,6 +337,10 @@ const totalCalc = () => {
     const total = cost + income
     return total
 }
+
+
+
+
 
 /* EVENTS */
 
@@ -416,12 +438,12 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
 
  // Delete Operation 
 
- const removeOperationButtons = document.querySelectorAll(".removeOperation-btn");
+ const removeOperationButtons = document.querySelectorAll(".removeOperation-btn")
 
     removeOperationButtons.forEach(button => {
         button.addEventListener("click", () => {
-            showElement(["#removeOperationConfirmation"]);
-        });
+            showElement(["#removeOperationConfirmation"])
+        })
     })
 
     $(".btn-cancel-delete-operation").addEventListener("click", () => {
@@ -429,7 +451,7 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     })
 
     $(".btn-confirm-delete-operation").addEventListener("click", () => {
-        const operationIdToDelete = $(".btn-confirm-delete-operation").getAttribute("data-operation-id");
+        const operationIdToDelete = $(".btn-confirm-delete-operation").getAttribute("data-operation-id")
         if (operationIdToDelete) {
             deleteOperation(operationIdToDelete)
             hideElement(["#removeOperationConfirmation"])
@@ -480,6 +502,7 @@ const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
         hideElement(["#removeCategoryConfirmation"])
     }) 
 
+    
 }
 
 
