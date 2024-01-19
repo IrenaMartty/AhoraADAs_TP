@@ -339,7 +339,49 @@ const totalCalc = () => {
 }
 
 
+/* VALIDATIONS */
 
+const validation = (field) => {
+    const descriptionValidation = $("#input-description-text").value.trim()
+    const amountValidation = $("#input-amount").valueAsNumber
+    const dateValidation = $("#op-input-date").valueAsDate
+    let validationPass = descriptionValidation !== "" && amountValidation  && dateValidation
+   
+    switch (field) {
+        case "descriptionValidation":
+    if (descriptionValidation === "") {
+        showElement([".error-message-description"])
+    } else {
+        hideElement([".error-message-description"])
+
+    }
+    break
+    case "amountValidation":
+    if (!amountValidation) {
+        showElement([".error-message-monto"])
+    } else {
+        hideElement([".error-message-monto"])
+    }
+    break
+    case "dateValidation":
+
+    if (!dateValidation) {
+        showElement([".error-message-date"])
+    } else {
+        hideElement([".error-message-date"])
+    }
+    break
+    // default: alert("Error")
+}
+if (validationPass) {
+    $("#btn-add-newOp").removeAttribute("disabled")
+
+} else {   
+     $("#btn-add-newOp").addAttribute("disabled", true)
+
+}
+
+}
 
 
 /* EVENTS */
@@ -502,7 +544,11 @@ const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
         hideElement(["#removeCategoryConfirmation"])
     }) 
 
-    
+    // Validations
+
+    $("#input-description-text").addEventListener("blur", () => validation("descriptionValidation"))
+    $("#input-amount").addEventListener("blur", () => validation("amountValidation"))
+    $("#op-input-date").addEventListener("blur", () => validation("dateValidation"))
 }
 
 
