@@ -113,7 +113,7 @@
                         <li class="filtros-section-type mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-type">Tipo</label>
                             <select id="form-select-type" class="form-select-type p-2 border-slate-200 border-2 rounded-md">
-                                <option value="todos">Todos</option>
+                                <option value="Todos">Todos</option>
                                 <option value="gasto">Gasto</option>
                                 <option value="ganancia">Ganancia</option>
                             </select>
@@ -122,13 +122,7 @@
                         <li class="filtros-section-category mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-category">Categoria</label>
                             <select id="form-select-category" class="form-select-category p-2 border-slate-200 border-2  rounded-md ">
-                                <option>Todas</option>
-                                <option>Comida</option>
-                                <option>Servicios</option>
-                                <option>Salidas</option>
-                                <option>Educación</option>
-                                <option>Transporte</option>
-                                <option>Trabajo</option>
+                               
                             </select>
                         </li>
 
@@ -224,12 +218,7 @@
             <label for="select-category" class="font-bold">Categoria</label>
             <select class="p-2 border-2 border-slate-300 mb-4 md:mb-4 rounded-md hover:border-gray-400" id="select-category" required>
 
-                                <option>Comida</option>
-                                <option>Servicios</option>
-                                <option>Salidas</option>
-                                <option>Educación</option>
-                                <option>Transporte</option>
-                                <option>Trabajo</option>
+                                
             </select>
 
             <label for="op-input-date" class="font-bold">Fecha</label>
@@ -245,6 +234,9 @@
                 <button
                     class="btn-confirm-edit text-white bg-sky-500 hover:bg-sky-600 w-24 p-2 ml-7 mt-5 rounded-md hidden" id="edit-operation">Editar</button>
             </div>
+        </div>
+        <div id="add-operation-confirmation" class="bg-white p-5 rounded-md m-1 lg:w-1/4 text-center border-solid border-2 border-gray-800 fixed  transform-translate-y-[-5%] z-50 hidden">
+            <p>Por favor, completa todos los campos</p>
         </div>
     </div>
 </section>

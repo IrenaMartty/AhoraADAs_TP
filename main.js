@@ -22,14 +22,26 @@ const hideElement = (selectors) => {
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
 
+// Date
+
+const date = new Date()
+console.log(date)
+
+const curentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+$("#op-input-date").valueAsDate = curentDate
+console.log(date)
+
+const firstDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 2)
+$("#pick-day").valueAsDate = firstDayOfTheMonth
 
 
 // CATEGORIES
-
 const getCategoryNameById = (categoryId) => {
     const categorySelected = getCategories().find(({id}) => id === categoryId)
     return categorySelected ? categorySelected.name : ''
 }
+
+
 // Default categories
 
 const defaultCategory = [
@@ -40,6 +52,10 @@ const defaultCategory = [
     {
         id: randomId(),
         name: "Salidas"
+    },
+    {
+        id: randomId(),
+        name: "Servicios"
     },
     {
         id: randomId(),
@@ -57,8 +73,12 @@ const defaultCategory = [
 
 
 const allOperations = getData("operations") || []
-const allCategoriesData = getData("categories") || {}
-const allCategories = allCategoriesData.defaultCategory || defaultCategory
+// const allCategoriesData = getData("categories") || {}
+const allCategories = getData("categories") || defaultCategory
+const getCategories = () => getData("categories") || []
+// const allCategories = allCategoriesData.defaultCategory || defaultCategory
+// console.log('cata', allCategories)
+
 
 
 //  Render categories
@@ -70,8 +90,8 @@ const renderCategories = (categories) => {
         <tr class="">
         <td class="text-emerald-600 rounded">${category.name}</td>
         <td class="text-right">
-        <button type="button" class="btn-edit-category data-id text-sky-500 hover:text-black">Editar</button>
-        <button type="button" class="btn-delete-category text-sky-500 hover:text-black data-id onclick="ejecutionDeleteCategoryBtn('${category.id}','${category.name}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</button>
+        <button type="button" class="btn-edit-category text-sky-500 hover:text-black">Editar</button>
+        <button type="button" class="btn-delete-category text-sky-500 hover:text-black" onclick="deleteCategory('${category.id}')">Eliminar</button>
         </td>
         <tr>
         `
@@ -79,6 +99,10 @@ const renderCategories = (categories) => {
 }
 
 const renderCategoryOptions = (categories) => {
+     // Clear existing options
+     $("#select-category").innerHTML = "";
+     $("#form-select-category").innerHTML = "";
+ 
     for (const category of categories) {
         $("#select-category").innerHTML += `
         <option value="${category.id}">${category.name}</option>
@@ -90,7 +114,6 @@ const renderCategoryOptions = (categories) => {
     }
 }
 
-const getCategories = () => getData("categories") || []
 
 // Add category
 const addCategory = () => {
@@ -101,15 +124,33 @@ const addCategory = () => {
             name: categoryName
         }
         const updatedCategories = [...getCategories(), newCategory]
-        setData("categories", updatedCategories)
         $("#input-add-category").value = ""
 
         renderCategories(updatedCategories)
         renderCategoryOptions(updatedCategories)
         
-    } else {
-        return `error`
+        setData("categories", updatedCategories)
+        
     }
+    } 
+
+// Delete Category
+
+
+const deleteCategory = (categoryId) => {
+    const updatedCategories = getData("categories").filter(category => category.id !== categoryId)
+    // console.log(updatedCategories)
+    setData("categories", updatedCategories)
+    renderCategories(updatedCategories)
+    renderCategoryOptions(updatedCategories)
+}
+
+const ejecutionDeleteCategoryBtn = (categoryId) => {
+    renderCategories(deleteCategory(categoryId))
+    const updatedData = getData("operations").filter(operation => operation.category !== categoryId)
+    console.log(updatedData)
+    set("operations", updatedData)
+     
 }
 
 //Edit Category
@@ -122,24 +163,6 @@ const addCategory = () => {
 
 // }
 
-// Delete Category
-
-// const ejecutionDeleteCategoryBtn = (categoryId) => {
-//     $(".btn-remove-categories").setAttribute("data-id", categoryId)
-//     $("#btn-remove-categories").addEventListener("click", () => {
-//         const categoryId = $("#btn-remove-categories").getAttribute("data-id")
-//         deleteCategory(categoryId)
-//         renderCategories(getData("categories"))
-//     })
-// }
-
-// const deleteCategory = (categoryId) => {
-//     const currentData = getData("categories").filter(category => category.id != categoryId)
-//     setData("categories", currentData)
-//     // window.location.reload()
-
-// }
-
 
 
 // OPERATIONS
@@ -149,10 +172,9 @@ const addCategory = () => {
 const getOperationById = (operationId) => getOperations().find(({id}) => id === operationId)
 
 
-
-const saveOperation = () => {
+const saveOperation = (operationId) => {
     return{
-        id: randomId(),
+        id: operationId ? operationId :randomId(),
         description: $("#input-description-text").value,
         category: $("#select-category").value,
         day: $("#op-input-date").value,
@@ -182,7 +204,7 @@ const showOperations = (arrayOperations) => {
    `<tr>
         <td class="text-center border-r-6 p-3max-w-[150px]">${operation.description}</td>
         <td class="text-center border-r-6 p-3">
-            <p class="bg-slate-300 text-center rounded-md">${categoryName(operation.category)}</p>
+            <p class="bg-slate-300 text-center rounded-md">${category.name}</p>
          </td>
         <td class="text-center border-r-6 p-3">${operation.day}</td>
         <td class="text-center border-r-6 p-3" id="num-amount">${operation.amount}</td>
@@ -202,15 +224,17 @@ const renderOperations = (operations) => {
         hideElement([".no-operations"])
         showElement([".operaciones-table-container"])
     for (const operation of operations) {
+        const categorySelected = getData("categories").find(category => category.id === operation.category)
+// console.log (categorySelected)
         $(".tbody-info-render").innerHTML += `
         <tr class="">
             <td class="sm:pr-6 text-left">${operation.description}</td>
-            <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${operation.category}</td>
+            <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected}</td>
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
             <td class="sm:pr-6 text-left">${operation.amount}</td>
             <td>
                 <button class="containerEditOperation-btn text-sky-500 hover:text-black" data-id onclick="editForm('${operation.id}')">Editar</i></button>
-                <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')" data-bs-toggle="modal" data-bs-target="#delete-modal">Eliminar</button>
+                <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')">Eliminar</button>
             </td>
         </tr>
         `
@@ -298,47 +322,6 @@ const deleteOperation = (operationId) => {
 
 }
 
-// Balance calculation
-const operations = getData("operations")
-console.log("Operations Data:", operations)
-
-// Total income
-const calculateIncome = () => {
-    const operations = getData("operations")
-    let acc = 0
-    for (const operation of operations) {
-        if (operation.type === "ganancia") {
-            acc += operation.amount
-    }
-
-}
-console.log("Total Income:", acc)
-    return acc
-
-}
-
-// Total cost
-const calculateCost = () => {
-    const operations = getData("operations")
-    let acc = 0
-    for (const operation of operations) {
-        if (operation.type === "gasto") {
-            acc -= operation.amount
-        }
-    }
-    console.log("Total Cost:", acc)
-    return acc
-}
-
-// Total calculation
-const totalCalc = () => {
-    const income = calculateIncome()
-    const cost = calculateCost()
-    const total = cost + income
-    return total
-}
-
-
 /* VALIDATIONS */
 
 const validation = (field) => {
@@ -382,6 +365,101 @@ if (validationPass) {
 }
 
 }
+
+// BALANCE CALCULATION
+const operations = getData("operations")
+console.log("Operations Data:", operations)
+
+// Total income
+const calculateIncome = () => {
+    const operations = getData("operations")
+    let acc = 0
+    for (const operation of operations) {
+        if (operation.type === "ganancia") {
+            acc += operation.amount
+    }
+
+}
+console.log("Total Income:", acc)
+    return acc
+
+}
+
+// Total cost
+const calculateCost = () => {
+    const operations = getData("operations")
+    let acc = 0
+    for (const operation of operations) {
+        if (operation.type === "gasto") {
+            acc -= operation.amount
+        }
+    }
+    console.log("Total Cost:", acc)
+    return acc
+}
+
+// Total calculation
+const totalCalc = () => {
+    const income = calculateIncome()
+    const cost = calculateCost()
+    const total = cost + income
+    return total
+}
+
+// FILTERS
+
+// Filter by type
+const filterType = (operations, operationType) => operations.filter(({type}) => type === operationType)
+
+// Filter by category
+const filterCategory = (operations, operationCategory) => operations.filter(({category}) => category === operationCategory)
+
+// Filter by date
+const filterDate = (operations, operationDate) => operations.filter(({day}) => new Date(day).getTime() >= operationDate.getTime())
+
+// Filter by order
+// date
+const byDate = (operations, order) => {
+    return [...operations].sort((a, b) => {
+        const dateA = new Date(a.day).getTime();
+        const dateB = new Date(b.day).getTime();
+        return order === 'recent' ? dateB - dateA : dateA - dateB;
+    });
+}
+// amount
+const byAmount = (operations, order) => {
+    return [...operations].sort((a, b) => {
+        return order === 'max' ? b.amount - a.amount : a.amount - b.amount
+    })
+}
+
+// alphabet
+const byAlphabet = (operations, order) => {
+    return [...operations].sort((a, b) => {
+        const descriptionA = a.description.toLowerCase()
+        const descriptionB = b.description.toLowerCase()
+        return order === 'aZ' ? descriptionA.localeCompare(descriptionB) : descriptionB.localeCompare(descriptionA)
+    })
+}
+
+const allFilters = () => {
+    const typeFilter = $("#form-select-type").value
+    const categoryFilter = $("#form-select-category").value
+    const dateFilter = new Date($("#pick-day").value)
+    const orderFilter = $("#form-select-order").value
+
+    let filteredOperations = [...operations]
+
+    if (typeFilter !== "Todos") {
+        filteredOperations = filterType(filteredOperations, typeFilter);
+    }
+
+
+    renderOperations(filteredOperations)
+    
+}
+
+
 
 
 /* EVENTS */
@@ -501,6 +579,31 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
         }
     })
 
+    // Filters
+    $(".hide-filters-btn").addEventListener("click", () => {
+        hideElement([".filtros-form"])
+        hideElement([".hide-filters-btn"])
+        showElement([".show-filters-btn"])
+        hideElement([".remove-filters-btn"])
+    })
+        $(".show-filters-btn").addEventListener("click", () => {
+        showElement([".filtros-form"])
+        showElement([".hide-filters-btn"])
+        showElement([".remove-filters-btn"])
+        hideElement([".show-filters-btn"])
+    })
+    
+    $(".remove-filters-btn").addEventListener("click", () => {
+    $(".form-select-category").value = "Todas";
+    $(".form-select-type").value = "todos";
+    $(".pick-day").valueAsDate = firstDayOfTheMonth
+    $(".form-select-order").value = "Mas reciente"
+
+    renderOperations(getData("operations"));
+})
+
+
+
     // Add category
 
     $("#btn-add-categories").addEventListener("click", (e) => {
@@ -532,24 +635,37 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     
      // Delete category
 
-const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
+// const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
 
-     deleteCategoryButtons.forEach(button => {
-         button.addEventListener("click", () => {
-            showElement(["#removeCategoryConfirmation"])
+//      deleteCategoryButtons.forEach(button => {
+//          button.addEventListener("click", () => {
+//             showElement(["#removeCategoryConfirmation"])
 
-     })
-    }) 
-    $(".btn-cancel-delete").addEventListener("click", () => {
-        hideElement(["#removeCategoryConfirmation"])
-    }) 
+//      })
+//     }) 
+//     $(".btn-cancel-delete").addEventListener("click", () => {
+//         hideElement(["#removeCategoryConfirmation"])
+//     }) 
+
+
+//     $("#btn-remove-categories").addEventListener("click", () => {
+//         console.log("Button clicked!")
+//         const categoryIdToDelete = $("#btn-remove-categories").getAttribute("data-category-id")
+//         if (categoryIdToDelete) {
+//             deleteCategory(categoryIdToDelete)
+//             renderCategories(deleteCategory(categoryId))
+//     setData("categories", currentData)
+//             hideElement(["#removeOperationConfirmation"])
+//             window.location.reload()
+//         }
+//     })
 
     // Validations
 
     $("#input-description-text").addEventListener("blur", () => validation("descriptionValidation"))
     $("#input-amount").addEventListener("blur", () => validation("amountValidation"))
     $("#op-input-date").addEventListener("blur", () => validation("dateValidation"))
-}
 
+}
 
 window.addEventListener("load", initializeApp)
