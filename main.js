@@ -139,7 +139,7 @@ const addCategory = () => {
 
 
 const deleteCategory = (categoryId) => {
-    const updatedCategories = getData("categories").filter(category => category.id !== categoryId)
+    const updatedCategories = getData("categories").filter(category => category.id != categoryId)
     // console.log(updatedCategories)
     setData("categories", updatedCategories)
     renderCategories(updatedCategories)
@@ -148,10 +148,10 @@ const deleteCategory = (categoryId) => {
 
 const ejecutionDeleteCategoryBtn = (categoryId) => {
     renderCategories(deleteCategory(categoryId))
-    const updatedData = getData("operations").filter(operation => operation.category !== categoryId)
-    // console.log(updatedData)
-    setData("operations", updatedData)
-     
+    const currentData = getData("operations").filter(operation => operation.category != categoryId)
+    // console.log(currentData)
+    setData("operations", currentData)
+    renderOperations(currentData)
 }
 
 //Edit Category
@@ -357,7 +357,7 @@ const deleteOperation = (operationId) => {
 const validation = (field) => {
     const descriptionValidation = $("#input-description-text").value.trim()
     const amountValidation = $("#input-amount").valueAsNumber
-    const dateValidation = $("#op-input-date").valueAsDate
+    // const dateValidation = $("#op-input-date").valueAsDate
     let validationPass = descriptionValidation !== "" && amountValidation  && dateValidation
    
     switch (field) {
@@ -376,14 +376,14 @@ const validation = (field) => {
         hideElement([".error-message-monto"])
     }
     break
-    case "dateValidation":
+    // case "dateValidation":
 
-    if (!dateValidation) {
-        showElement([".error-message-date"])
-    } else {
-        hideElement([".error-message-date"])
-    }
-    break
+    // if (!dateValidation) {
+    //     showElement([".error-message-date"])
+    // } else {
+    //     hideElement([".error-message-date"])
+    // }
+    // break
     // default: alert("Error")
 }
 if (validationPass) {
@@ -391,10 +391,11 @@ if (validationPass) {
 
 } else {   
      $("#btn-add-newOp").addAttribute("disabled", true)
+    }
 
 }
 
-}
+
 
 // BALANCE CALCULATION
 const operations = getData("operations")
@@ -609,22 +610,31 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
         }
     })
 
-    // Filters
+//     // Filters
+
 
     $(".form-select-type").addEventListener("input", (e) => {
         const selectType = e.target.value
+        if (selectType === "Todos") {
+            
+            renderOperations(getData("operations"))
+        } else {
         const currentData = getData("operations")
-        const filterOperations = currentData.filter(operation => operation.type === selectType)
-        renderOperations(filterOperations)
-
+        const filterType = currentData.filter(operation => operation.type === selectType)
+        renderOperations(filterType)
+        }
      })
 
      $(".form-select-category").addEventListener("input", (e) => {
         const selectCategory = e.target.value
+        if (selectCategory === "Todas") {
+            
+            renderOperations(getData("operations"))
+        } else {
         const currentData = getData("operations")
-        const filterOperations = currentData.filter(operation => operation.category === selectCategory)
-        renderOperations(filterOperations)
-
+        const filterCategory = currentData.filter(operation => operation.category === selectCategory)
+        renderOperations(filterCategory)
+        }
      })
     
      $("#pick-day").addEventListener("input", (e) => {
@@ -634,19 +644,15 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
         // console.log("Selected Date:", selectedDate)
         
         const currentData = getData("operations")
-        
     
-        const filterOperations= currentData.filter(operation => {
+        const filterDate= currentData.filter(operation => {
             const operationDate = new Date(operation.day)
             // console.log("Operation Date:", operationDate);
 
             return operationDate >= selectedDate && operationDate <= currentDate
         })    
-        console.log(filterOperations);
 
-
-    renderOperations(filterOperations)
-
+renderOperations(filterDate)
      })
 
      $("#form-select-order").addEventListener("input", (e) => {
@@ -654,40 +660,34 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
    const selectedOption = e.target.value;
    const currentData = getData("operations")
 
-   let sortedOperations
+   let filterOperations
    switch (selectedOption) {
        case "Mas reciente":
-           sortedOperations = currentData.sort((a, b) => new Date(a.day) - new Date(b.day))
+        filterOperations = currentData.sort((a, b) => new Date(a.day) - new Date(b.day))
            break;
        case "Menos reciente":
-           sortedOperations = currentData.sort((a, b) => new Date(b.day) - new Date(a.day))
+        filterOperations = currentData.sort((a, b) => new Date(b.day) - new Date(a.day))
            break;
        case "Mayor monto":
-           sortedOperations = currentData.sort((a, b) => b.amount - a.amount);
+        filterOperations = currentData.sort((a, b) => b.amount - a.amount)
            break;
        case "Menor monto":
-           sortedOperations = currentData.sort((a, b) => a.amount - b.amount);
+        filterOperations = currentData.sort((a, b) => a.amount - b.amount)
            break;
        case "A-Z":
-           sortedOperations = currentData.sort((a, b) => a.description.localeCompare(b.description))
+        filterOperations = currentData.sort((a, b) => a.description.localeCompare(b.description))
            break;
        case "Z-A":
-           sortedOperations = currentData.sort((a, b) => b.description.localeCompare(a.description))
+        filterOperations = currentData.sort((a, b) => b.description.localeCompare(a.description))
            break;
        default:
-           sortedOperations = currentData;
+        filterOperations = currentData
    }
 
-   renderOperations(sortedOperations);
+   renderOperations(filterOperations)
+
+
 }) 
-
-
-
-
-
-
-
-
 
     $(".hide-filters-btn").addEventListener("click", () => {
         hideElement([".filtros-form"])
@@ -703,12 +703,12 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     })
     
     $(".remove-filters-btn").addEventListener("click", () => {
-    $("#form-select-category").value = "Todas";
-    $("#form-select-type").value = "Todos";
+    $("#form-select-type").value = "Todos"
+    $("#form-select-category").value = "Todas"
     $("#pick-day").valueAsDate = firstDayOfTheMonth
     $("#form-select-order").value = "Mas reciente"
 
-    renderOperations(getData("operations"));
+    renderOperations(getData("operations"))
 })
 
     // Add category
@@ -771,7 +771,7 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
 
     $("#input-description-text").addEventListener("blur", () => validation("descriptionValidation"))
     $("#input-amount").addEventListener("blur", () => validation("amountValidation"))
-    $("#op-input-date").addEventListener("blur", () => validation("dateValidation"))
+    // $("#op-input-date").addEventListener("blur", () => validation("dateValidation"))
 
 }
 
