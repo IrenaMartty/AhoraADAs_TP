@@ -204,7 +204,7 @@ const showOperations = (arrayOperations) => {
    `<tr>
         <td class="text-center border-r-6 p-3max-w-[150px]">${operation.description}</td>
         <td class="text-center border-r-6 p-3">
-            <p class="bg-slate-300 text-center rounded-md">${category.name}</p>
+            <p class="bg-slate-300 text-center rounded-md">${categorySelected.name}</p>
          </td>
         <td class="text-center border-r-6 p-3">${operation.day}</td>
         <td class="text-center border-r-6 p-3" id="num-amount">${operation.amount}</td>
@@ -229,7 +229,7 @@ const renderOperations = (operations) => {
         $(".tbody-info-render").innerHTML += `
         <tr class="">
             <td class="sm:pr-6 text-left">${operation.description}</td>
-            <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected}</td>
+            <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
             <td class="sm:pr-6 text-left">${operation.amount}</td>
             <td>
@@ -391,18 +391,18 @@ const calculateCost = () => {
     let acc = 0
     for (const operation of operations) {
         if (operation.type === "gasto") {
-            acc -= operation.amount
+            acc += operation.amount
         }
     }
-    console.log("Total Cost:", acc)
-    return acc
+    console.log("Total Cost:", acc);
+    return acc;
 }
 
 // Total calculation
 const totalCalc = () => {
     const income = calculateIncome()
     const cost = calculateCost()
-    const total = cost + income
+    const total = income + cost
     return total
 }
 
