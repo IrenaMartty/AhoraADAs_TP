@@ -25,11 +25,11 @@ const cleanContainer = (selector) => $(selector).innerHTML = ""
 // Date
 
 const date = new Date()
-console.log(date)
+// console.log(date)
 
 const curentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
 $("#op-input-date").valueAsDate = curentDate
-console.log(date)
+// console.log(date)
 
 const firstDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 2)
 $("#pick-day").valueAsDate = firstDayOfTheMonth
@@ -90,7 +90,7 @@ const renderCategories = (categories) => {
         <tr class="">
         <td class="text-emerald-600 rounded">${category.name}</td>
         <td class="text-right">
-        <button type="button" class="btn-edit-category text-sky-500 hover:text-black">Editar</button>
+        <button type="button" class="btn-edit-category text-sky-500 hover:text-black" onclick="editCategory('${category.id}')">Editar</button>
         <button type="button" class="btn-delete-category text-sky-500 hover:text-black" onclick="deleteCategory('${category.id}')">Eliminar</button>
         </td>
         <tr>
@@ -99,9 +99,10 @@ const renderCategories = (categories) => {
 }
 
 const renderCategoryOptions = (categories) => {
-     // Clear existing options
      $("#select-category").innerHTML = "";
      $("#form-select-category").innerHTML = "";
+     $("#form-select-category").innerHTML += `<option value="Todas">Todas</option>`;
+
  
     for (const category of categories) {
         $("#select-category").innerHTML += `
@@ -148,20 +149,49 @@ const deleteCategory = (categoryId) => {
 const ejecutionDeleteCategoryBtn = (categoryId) => {
     renderCategories(deleteCategory(categoryId))
     const updatedData = getData("operations").filter(operation => operation.category !== categoryId)
-    console.log(updatedData)
-    set("operations", updatedData)
+    // console.log(updatedData)
+    setData("operations", updatedData)
      
 }
 
 //Edit Category
 
-// const editCategory = (categoryId) => {
-//     return {
-//         id: categoryId,
-//         name: $("#editCategory").value
-//     }
+const changeCategory = (categoryId) => {
+    return {
+        id: categoryId,
+        name: $('#editCategory').value,
+    }
+}
 
-// }
+const editCategory = (categoryId) => {
+    const categoryEdited = getData("categories").find(category => category.id === categoryId)
+    $("#editCategoryButton").setAttribute('data-id', categoryId)
+    $('#editCategory').value = categoryEdited.name
+    
+}
+
+$("#editCategoryButton").addEventListener("click", (e) => {
+    e.preventDefault()
+    const categoryId = $("#editCategoryButton").getAttribute("data-id")
+    const currentData = getData("categories").map(category => {
+        if(category.id === categoryId) {
+            return changeCategory(categoryId)
+        }
+        return category
+    })
+    setData("categories", currentData)
+    renderCategories(currentData)
+    renderCategoryOptions(currentData)
+
+    const currentDataOperations = getData("operations")
+
+    renderOperations(currentDataOperations)
+
+    
+    hideElement(["#containerEditCategory"])
+    showElement(["#categories-container"])
+    
+})
 
 
 
@@ -368,7 +398,7 @@ if (validationPass) {
 
 // BALANCE CALCULATION
 const operations = getData("operations")
-console.log("Operations Data:", operations)
+// console.log("Operations Data:", operations)
 
 // Total income
 const calculateIncome = () => {
@@ -380,7 +410,7 @@ const calculateIncome = () => {
     }
 
 }
-console.log("Total Income:", acc)
+// console.log("Total Income:", acc)
     return acc
 
 }
@@ -394,7 +424,7 @@ const calculateCost = () => {
             acc += operation.amount
         }
     }
-    console.log("Total Cost:", acc);
+    // console.log("Total Cost:", acc);
     return acc;
 }
 
@@ -408,56 +438,56 @@ const totalCalc = () => {
 
 // FILTERS
 
-// Filter by type
-const filterType = (operations, operationType) => operations.filter(({type}) => type === operationType)
+// // Filter by type
+// const filterType = (operations, operationType) => operations.filter(({type}) => type === operationType)
 
-// Filter by category
-const filterCategory = (operations, operationCategory) => operations.filter(({category}) => category === operationCategory)
+// // Filter by category
+// const filterCategory = (operations, operationCategory) => operations.filter(({category}) => category === operationCategory)
 
-// Filter by date
-const filterDate = (operations, operationDate) => operations.filter(({day}) => new Date(day).getTime() >= operationDate.getTime())
+// // Filter by date
+// const filterDate = (operations, operationDate) => operations.filter(({day}) => new Date(day).getTime() >= operationDate.getTime())
 
-// Filter by order
-// date
-const byDate = (operations, order) => {
-    return [...operations].sort((a, b) => {
-        const dateA = new Date(a.day).getTime();
-        const dateB = new Date(b.day).getTime();
-        return order === 'recent' ? dateB - dateA : dateA - dateB;
-    });
-}
-// amount
-const byAmount = (operations, order) => {
-    return [...operations].sort((a, b) => {
-        return order === 'max' ? b.amount - a.amount : a.amount - b.amount
-    })
-}
+// // Filter by order
+// // date
+// const byDate = (operations, order) => {
+//     return [...operations].sort((a, b) => {
+//         const dateA = new Date(a.day).getTime();
+//         const dateB = new Date(b.day).getTime();
+//         return order === 'recent' ? dateB - dateA : dateA - dateB;
+//     });
+// }
+// // amount
+// const byAmount = (operations, order) => {
+//     return [...operations].sort((a, b) => {
+//         return order === 'max' ? b.amount - a.amount : a.amount - b.amount
+//     })
+// }
 
-// alphabet
-const byAlphabet = (operations, order) => {
-    return [...operations].sort((a, b) => {
-        const descriptionA = a.description.toLowerCase()
-        const descriptionB = b.description.toLowerCase()
-        return order === 'aZ' ? descriptionA.localeCompare(descriptionB) : descriptionB.localeCompare(descriptionA)
-    })
-}
+// // alphabet
+// const byAlphabet = (operations, order) => {
+//     return [...operations].sort((a, b) => {
+//         const descriptionA = a.description.toLowerCase()
+//         const descriptionB = b.description.toLowerCase()
+//         return order === 'aZ' ? descriptionA.localeCompare(descriptionB) : descriptionB.localeCompare(descriptionA)
+//     })
+// }
 
-const allFilters = () => {
-    const typeFilter = $("#form-select-type").value
-    const categoryFilter = $("#form-select-category").value
-    const dateFilter = new Date($("#pick-day").value)
-    const orderFilter = $("#form-select-order").value
+// const allFilters = () => {
+//     const typeFilter = $("#form-select-type").value
+//     const categoryFilter = $("#form-select-category").value
+//     const dateFilter = new Date($("#pick-day").value)
+//     const orderFilter = $("#form-select-order").value
 
-    let filteredOperations = [...operations]
+//     let filteredOperations = [...operations]
 
-    if (typeFilter !== "Todos") {
-        filteredOperations = filterType(filteredOperations, typeFilter);
-    }
+//     if (typeFilter !== "Todos") {
+//         filteredOperations = filterType(filteredOperations, typeFilter);
+//     }
 
 
-    renderOperations(filteredOperations)
+//     renderOperations(filteredOperations)
     
-}
+// }
 
 
 
@@ -580,6 +610,85 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     })
 
     // Filters
+
+    $(".form-select-type").addEventListener("input", (e) => {
+        const selectType = e.target.value
+        const currentData = getData("operations")
+        const filterOperations = currentData.filter(operation => operation.type === selectType)
+        renderOperations(filterOperations)
+
+     })
+
+     $(".form-select-category").addEventListener("input", (e) => {
+        const selectCategory = e.target.value
+        const currentData = getData("operations")
+        const filterOperations = currentData.filter(operation => operation.category === selectCategory)
+        renderOperations(filterOperations)
+
+     })
+    
+     $("#pick-day").addEventListener("input", (e) => {
+        e.preventDefault()
+        const selectedDate = new Date(e.target.value)
+        const currentDate = new Date()
+        // console.log("Selected Date:", selectedDate)
+        
+        const currentData = getData("operations")
+        
+    
+        const filterOperations= currentData.filter(operation => {
+            const operationDate = new Date(operation.day)
+            // console.log("Operation Date:", operationDate);
+
+            return operationDate >= selectedDate && operationDate <= currentDate
+        })    
+        console.log(filterOperations);
+
+
+    renderOperations(filterOperations)
+
+     })
+
+     $("#form-select-order").addEventListener("input", (e) => {
+    
+   const selectedOption = e.target.value;
+   const currentData = getData("operations")
+
+   let sortedOperations
+   switch (selectedOption) {
+       case "Mas reciente":
+           sortedOperations = currentData.sort((a, b) => new Date(a.day) - new Date(b.day))
+           break;
+       case "Menos reciente":
+           sortedOperations = currentData.sort((a, b) => new Date(b.day) - new Date(a.day))
+           break;
+       case "Mayor monto":
+           sortedOperations = currentData.sort((a, b) => b.amount - a.amount);
+           break;
+       case "Menor monto":
+           sortedOperations = currentData.sort((a, b) => a.amount - b.amount);
+           break;
+       case "A-Z":
+           sortedOperations = currentData.sort((a, b) => a.description.localeCompare(b.description))
+           break;
+       case "Z-A":
+           sortedOperations = currentData.sort((a, b) => b.description.localeCompare(a.description))
+           break;
+       default:
+           sortedOperations = currentData;
+   }
+
+   renderOperations(sortedOperations);
+}) 
+
+
+
+
+
+
+
+
+
     $(".hide-filters-btn").addEventListener("click", () => {
         hideElement([".filtros-form"])
         hideElement([".hide-filters-btn"])
@@ -594,15 +703,13 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
     })
     
     $(".remove-filters-btn").addEventListener("click", () => {
-    $(".form-select-category").value = "Todas";
-    $(".form-select-type").value = "todos";
-    $(".pick-day").valueAsDate = firstDayOfTheMonth
-    $(".form-select-order").value = "Mas reciente"
+    $("#form-select-category").value = "Todas";
+    $("#form-select-type").value = "Todos";
+    $("#pick-day").valueAsDate = firstDayOfTheMonth
+    $("#form-select-order").value = "Mas reciente"
 
     renderOperations(getData("operations"));
 })
-
-
 
     // Add category
 
