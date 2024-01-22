@@ -255,13 +255,17 @@ const renderOperations = (operations) => {
         showElement([".operaciones-table-container"])
     for (const operation of operations) {
         const categorySelected = getData("categories").find(category => category.id === operation.category)
+        const formattedAmount = operation.type === "ganancia" ? `+$${operation.amount}` : `-$${operation.amount}`
+        const amountColor = operation.type === "ganancia" ? "text-emerald-500" : "text-rose-500";
+
+        
 // console.log (categorySelected)
         $(".tbody-info-render").innerHTML += `
         <tr class="">
             <td class="sm:pr-6 text-left">${operation.description}</td>
             <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
-            <td class="sm:pr-6 text-left">${operation.amount}</td>
+            <td class="sm:pr-6 text-left ${amountColor}">${formattedAmount}</td>
             <td>
                 <button class="containerEditOperation-btn text-sky-500 hover:text-black" data-id onclick="editForm('${operation.id}')">Editar</i></button>
                 <button type="button" class="btn removeOperation-btn text-sky-500 hover:text-black" data-id onclick="ejecutionDeleteBtn('${operation.id}','${operation.description}')">Eliminar</button>
@@ -358,7 +362,7 @@ const validation = (field) => {
     const descriptionValidation = $("#input-description-text").value.trim()
     const amountValidation = $("#input-amount").valueAsNumber
     // const dateValidation = $("#op-input-date").valueAsDate
-    let validationPass = descriptionValidation !== "" && amountValidation  && dateValidation
+    let validationPass = descriptionValidation !== "" && amountValidation
    
     switch (field) {
         case "descriptionValidation":
@@ -390,7 +394,7 @@ if (validationPass) {
     $("#btn-add-newOp").removeAttribute("disabled")
 
 } else {   
-     $("#btn-add-newOp").addAttribute("disabled", true)
+     $("#btn-add-newOp").setAttribute("disabled", true)
     }
 
 }
@@ -399,43 +403,56 @@ if (validationPass) {
 
 // BALANCE CALCULATION
 const operations = getData("operations")
-// console.log("Operations Data:", operations)
 
 // Total income
 const calculateIncome = () => {
-    const operations = getData("operations")
     let acc = 0
     for (const operation of operations) {
         if (operation.type === "ganancia") {
-            acc += operation.amount
+            acc += operation.amount;
+        }
+        
     }
-
-}
-// console.log("Total Income:", acc)
+    
+    $("#income").innerText = `+$${Math.abs(acc)}`
     return acc
-
 }
 
 // Total cost
 const calculateCost = () => {
-    const operations = getData("operations")
     let acc = 0
     for (const operation of operations) {
         if (operation.type === "gasto") {
-            acc += operation.amount
+            acc -= operation.amount
         }
     }
     // console.log("Total Cost:", acc);
-    return acc;
+    $("#cost").innerText = `-$${Math.abs(acc)}`
+    return acc
 }
 
 // Total calculation
-const totalCalc = () => {
-    const income = calculateIncome()
-    const cost = calculateCost()
+const totalCalc = () => {{}
+    const income = calculateIncome() 
+    const cost = calculateCost() 
     const total = income + cost
+    console.log("Income:", income);
+    console.log("Cost:", cost)
+    console.log("total:", total)
+   
+    $("#total").innerText = `+$${Math.abs(total)}`
     return total
 }
+
+const updateTotalColor = () => {
+    const total = totalCalc();
+    if (total < 0) {
+        $("#total").classList.add("text-rose-500");
+    } else {
+        $("#total").classList.add("text-emerald-500");
+    }
+}
+setInterval(updateTotalColor, 1000)
 
 // FILTERS
 
@@ -490,6 +507,29 @@ const totalCalc = () => {
     
 // }
 
+
+/* REPORTS */
+
+// const bringInfo = () => {
+//     const bringOperations = getOperations()
+//     const bringCategories = getCategories()
+
+
+//     const reports = obtenerResumen(operations, categories)
+    
+//     if (
+//         renderOperations != ""
+
+//     )
+// }
+
+// Resumen
+
+
+// Totals by category
+
+
+// Totals by month
 
 
 
