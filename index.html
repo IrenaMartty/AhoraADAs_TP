@@ -338,13 +338,13 @@
 
     
 <!--Tabla de reportes-->
-    <div class="show-reports flex flex-col hidden">
+    <div class="show-reports flex flex-col">
         <div class=" m-10">
-            <h4 class="text-xl font-bold">Resumen</h4>
-            <ul class="reports-resume"></ul>
+            <h4 class="text-xl font-bold">Resume</h4>
+            <ul class="summary"></ul>
         </div>
         <div class="m-10">
-            <h4 class="text-xl font-bold">Totales por categoría</h4>
+            <h4 class="text-xl font-bold">Totals by category</h4>
             <div class="">
                 <table class="mt-5 w-full">
                     <thead>
@@ -355,12 +355,12 @@
                             <th class="">Balance</th>
                         </tr>
                     </thead>
-                    <tbody class=""></tbody>
+                    <tbody class="reports-total-by-category"></tbody>
                 </table>
             </div>  
         </div>
         <div class="m-10">
-            <h4 class="text-xl font-bold">Totales por mes</h4>
+            <h4 class="text-xl font-bold">Totals by month</h4>
             <div class="">
                 <table class="mt-5 w-full">
                     <thead>
@@ -371,12 +371,12 @@
                             <th class="">Balance</th>
                         </tr>
                     </thead>
-                    <tbody class="reports-months"></tbody>
+                    <tbody class="reports-total-by-months"></tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="no-operations mt-10 flex items-center flex-col">
+    <div class="no-reports mt-10 flex items-center flex-col hidden">
         <figure class="flex justify-center p-6">
             <img class="w-2/5" src="./Images/savings.svg" alt="Sin Resultados">
         </figure>

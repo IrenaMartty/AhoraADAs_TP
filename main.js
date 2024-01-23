@@ -22,7 +22,7 @@ const hideElement = (selectors) => {
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
 
-// Date
+// Get Date
 
 const date = new Date()
 // console.log(date)
@@ -35,7 +35,12 @@ const firstDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 2)
 $("#pick-day").valueAsDate = firstDayOfTheMonth
 
 
-// CATEGORIES
+
+/* CATEGORIES */
+
+
+// Get categories 
+
 const getCategoryNameById = (categoryId) => {
     const categorySelected = getCategories().find(({id}) => id === categoryId)
     return categorySelected ? categorySelected.name : ''
@@ -182,6 +187,7 @@ $("#editCategoryButton").addEventListener("click", (e) => {
     setData("categories", currentData)
     renderCategories(currentData)
     renderCategoryOptions(currentData)
+    renderSummary(currentData)
 
     const currentDataOperations = getData("operations")
 
@@ -195,9 +201,11 @@ $("#editCategoryButton").addEventListener("click", (e) => {
 
 
 
-// OPERATIONS
+/* OPERATIONS */
 
 //  Add New Operation
+
+// Get operation
 
 const getOperationById = (operationId) => getOperations().find(({id}) => id === operationId)
 
@@ -246,7 +254,7 @@ const showOperations = (arrayOperations) => {
     `
   }
 }
-// Renders-Operation
+// Render Operation
 
 const renderOperations = (operations) => {
     cleanContainer(".tbody-info-render")
@@ -257,13 +265,11 @@ const renderOperations = (operations) => {
         const categorySelected = getData("categories").find(category => category.id === operation.category)
         const formattedAmount = operation.type === "ganancia" ? `+$${operation.amount}` : `-$${operation.amount}`
         const amountColor = operation.type === "ganancia" ? "text-emerald-500" : "text-rose-500";
-
-        
 // console.log (categorySelected)
         $(".tbody-info-render").innerHTML += `
         <tr class="">
             <td class="sm:pr-6 text-left">${operation.description}</td>
-            <td class="text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
+            <td class="px-3 py-1 text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
             <td class="sm:pr-6 text-left ${amountColor}">${formattedAmount}</td>
             <td>
@@ -356,7 +362,7 @@ const deleteOperation = (operationId) => {
 
 }
 
-/* VALIDATIONS */
+/* FORM VALIDATIONS */
 
 const validation = (field) => {
     const descriptionValidation = $("#input-description-text").value.trim()
@@ -400,8 +406,8 @@ if (validationPass) {
 }
 
 
+/* BALANCE CALCULATION */
 
-// BALANCE CALCULATION
 const operations = getData("operations")
 
 // Total income
@@ -436,23 +442,13 @@ const totalCalc = () => {{}
     const income = calculateIncome() 
     const cost = calculateCost() 
     const total = income + cost
-    console.log("Income:", income);
-    console.log("Cost:", cost)
-    console.log("total:", total)
+    // console.log("Income:", income);
+    // console.log("Cost:", cost)
+    // console.log("total:", total)
    
     $("#total").innerText = `+$${Math.abs(total)}`
     return total
 }
-
-const updateTotalColor = () => {
-    const total = totalCalc();
-    if (total < 0) {
-        $("#total").classList.add("text-rose-500");
-    } else {
-        $("#total").classList.add("text-emerald-500");
-    }
-}
-setInterval(updateTotalColor, 1000)
 
 // FILTERS
 
@@ -510,26 +506,223 @@ setInterval(updateTotalColor, 1000)
 
 /* REPORTS */
 
-// const bringInfo = () => {
-//     const bringOperations = getOperations()
-//     const bringCategories = getCategories()
+// SUMMARY
 
-
-//     const reports = obtenerResumen(operations, categories)
-    
-//     if (
-//         renderOperations != ""
-
-//     )
-// }
-
-// Resumen
-
+// By Category
 
 // Totals by category
 
+const totalbyCategory = () => {
+    return operations.reduce((acc, operation) => {
+        const { category, amount, type } = operation;
+        const operationValue = type === "ganancia" ? amount : -amount;
+
+        if (!acc[category]) {
+            acc[category] = {
+                totalIncome: 0,
+                totalCost: 0,
+                totalBalance: 0,
+            }
+        }
+        if (type === "ganancia") {
+            acc[category].totalIncome += amount
+        } else {
+            acc[category].totalCost += amount
+        }
+
+        acc[category].totalBalance += operationValue
+
+        return acc
+    }, {})
+}
+// Category with the highest income
+
+const categoryWithHighestIncome = (property) => {
+    const totalNumbers = totalbyCategory()
+    let highestCategory = Object.keys(totalNumbers)[0]
+
+    for(const category in totalNumbers) {
+        if (totalNumbers[category][property]> totalNumbers[highestCategory][property]) {
+        highestCategory = category
+    }
+}
+const categoryName = getCategoryNameById(highestCategory)
+const highestAmount = totalNumbers[highestCategory][property]
+return {categoryName, highestAmount}
+
+}
+
+// By Month
+// Get Month
+const getMonthAndYear = (monthNum, year) => {
+    const allMonths = [
+        "Enero", 
+        "Febrero", 
+        "Marzo", 
+        "Abril",
+        "Mayo", 
+        "Junio", 
+        "Julio", 
+        "Agosto",
+        "Septiembre", 
+        "Octubre", 
+        "Noviembre", 
+        "Diciembre",
+    ]
+    if (monthNum >= 0 && monthNum <= 11) {
+        return `${allMonths[monthNum]}/${year}`
+}
+}
+// Totals by month
+const totalByMonth = () => {
+    return operations.reduce((acc, operation) => {
+        const {day, amount, type} = operation
+        const operationValue = type === "ganancia" ? amount : -amount
+
+        const year = new Date(day).getFullYear()
+        const month = new Date(day).getMonth()
+
+        if(!acc[year]) {
+            acc[year] = {}
+        }
+        if (!acc[year][month]) {
+            acc[year][month] = {
+                totalIncome: 0,
+                totalCost: 0,
+                totalBalance: 0,
+            }
+        }
+        if (type === 'ganancia') {
+            acc[year][month].totalIncome += amount
+        } else {
+            acc[year][month].totalCost += amount
+        }
+
+        acc[year][month].totalBalance += operationValue
+
+        return acc
+    }, {})
+}
+
+// Month with the highest income
+const monthWithHighestIncome = (property) => {
+    const totalNumbers = totalByMonth()
+    let highestMonth = {year: null, month: null}
+    let highestAmount = null
+
+    for (const year in totalNumbers) {
+        for(const month in totalNumbers[year]) {
+            const currentAmount = totalNumbers[year][month][property]
+            if (highestAmount === null || currentAmount > highestAmount) {
+                highestAmount = currentAmount
+                highestMonth = {year, month}
+            }
+        }
+    }
+    return {highestMonth, highestAmount}
+
+}
+
+// Renders
+
+const renderCategorySum = (title, categoryType, amount) => {
+    const{categoryName, highestAmount} = categoryWithHighestIncome(categoryType)
+    $(".summary").innerHTML += `
+    <li class="my-6 md:flex md:justify-between">
+    <p class="mb-2 md:mb-0">${title}</p>
+    <div class="flex justify-between md:w-1/3">
+        <span class="px-3 py-1 rounded text-emerald-600 bg-emerald-50">${categoryName}</span>
+        <span class="font-medium ${amount < 0 ? 'text-rose-500' : amount > 0 ? 'text-emerald-500' : ''}">${amount > 0 ? '+' : amount < 0 ? '-' : ''}$${Math.abs(highestAmount)}</span>
+    </div>
+    </li>`
+}
+
+const renderMonthSum = (title, property, amount) => {
+    const {highestMonth, highestAmount} = monthWithHighestIncome(property)
+    $(".summary").innerHTML += `
+    <li class="my-6 md:flex md:justify-between">
+        <p class="mb-2 font-medium md:mb-0">${title}</p>
+        <div class="flex justify-between md:w-1/3">
+            <span>${getMonthAndYear(highestMonth.month, highestMonth.year)}</span>
+            <span class="font-medium ${amount < 0 ? 'text-rose-500' : 'text-emerald-500'}">${amount > 0 ? '+' : '-'}$${Math.abs(highestAmount)}</span>
+        </div>
+    </li>`
+}
+
+const renderHighestIncomeCategory = () => renderCategorySum ("Categoría con mayor ganancia", "totalIncome", 1)
+const renderHighestCostCategory = () => renderCategorySum ("Categoría con mayor gasto", "totalCost", -1)
+const renderHighestBalanceCategory = () => renderCategorySum ("Categoría con mayor balance", "totalBalance", 0)
+const renderHighestIncomeMonth = () => renderMonthSum ("Mes con mayor ganancia", "totalIncome", 1)
+const renderHighestCostMonth = () => renderMonthSum ("Mes con mayor gasto", "totalCost", -1)
+
+const renderSummary = () => {
+    cleanContainer(".summary")
+    renderHighestIncomeCategory()
+    renderHighestCostCategory()
+    renderHighestBalanceCategory()
+    renderHighestIncomeMonth()
+    renderHighestCostMonth()
+
+}
+
+// Render totals
+
+// Totals by category
+
+const renderTotalbyCategory = () => {
+    const totalAmountsByCategory = totalbyCategory()
+
+    cleanContainer(".reports-total-by-category")
+    for (const category in totalAmountsByCategory) {
+        const { totalIncome, totalCost, totalBalance } = totalAmountsByCategory[category]
+        $(".reports-total-by-category").innerHTML += `
+            <tr>
+                <td class="pr-4 pb-6 font-medium md:pr-0">${getCategoryNameById(category)}</td>
+                <td class="pr-4 pb-6 text-right text-green-500 md:pr-0">+$${totalIncome}</td>
+                <td class="pr-4 pb-6 text-right text-red-500 md:pr-0">-$${totalCost}</td>
+                <td class="pb-6 text-right">$${totalBalance}</td>
+            </tr>
+        `
+    }
+}
 
 // Totals by month
+
+const renderTotalbyMonth = () => {
+    const totalAmountsByMonth = totalByMonth()
+
+    cleanContainer(".reports-total-by-months")
+    for (const year in totalAmountsByMonth) {
+        for (const month in totalAmountsByMonth[year]) {
+            const { totalIncome, totalCost, totalBalance } = totalAmountsByMonth[year][month]
+            $(".reports-total-by-months").innerHTML += `
+                <tr>
+                    <td class="pr-4 pb-6 font-medium md:pr-0">${getMonthAndYear(parseInt(month), parseInt(year))}</td>
+                    <td class="pr-4 pb-6 text-right text-green-500 md:pr-0">+$${totalIncome}</td>
+                    <td class="pr-4 pb-6 text-right text-red-500 md:pr-0">-$${totalCost}</td>
+                    <td class="pb-6 text-right">$${totalBalance}</td>
+                </tr>`
+        }
+    }
+    
+}
+
+const reportUpdate = () => {
+    const presentIncome = operations.some(({ type }) => type === "ganancia");
+    const presentCost = operations.some(({ type }) => type === "gasto");
+
+    if (presentIncome && presentCost) {
+        showElement([".show-reports"])
+        hideElement([".no-reports"])
+        renderSummary()
+        renderTotalbyCategory()
+        renderTotalbyMonth()
+    } else {
+        hideElement([".show-reports"])
+        showElement([".no-reports"])
+    }
+}
+
 
 
 
@@ -541,6 +734,7 @@ const initializeApp = () => {
     renderOperations(allOperations) 
     renderCategories(allCategories)
     renderCategoryOptions(allCategories)
+    reportUpdate()
     // addCategory(allCategories)
 $("#income").innerText = calculateIncome()
 $("#cost").innerText = calculateCost()
@@ -650,7 +844,7 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
         }
     })
 
-//     // Filters
+/* FILTERS */
 
 
     $(".form-select-type").addEventListener("input", (e) => {
@@ -807,7 +1001,7 @@ renderOperations(filterDate)
 //         }
 //     })
 
-    // Validations
+    // Form validations
 
     $("#input-description-text").addEventListener("blur", () => validation("descriptionValidation"))
     $("#input-amount").addEventListener("blur", () => validation("amountValidation"))
