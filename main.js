@@ -96,7 +96,7 @@ const renderCategories = (categories) => {
         <td class="text-emerald-600 rounded">${category.name}</td>
         <td class="text-right">
         <button type="button" class="btn-edit-category text-sky-500 hover:text-black" onclick="editCategory('${category.id}')">Editar</button>
-        <button type="button" class="btn-delete-category text-sky-500 hover:text-black" onclick="deleteCategory('${category.id}')">Eliminar</button>
+        <button type="button" class="btn-delete-category text-sky-500 hover:text-black" onclick="ejecutionDeleteCategoryBtn('${category.id}')">Eliminar</button>
         </td>
         <tr>
         `
@@ -145,10 +145,8 @@ const addCategory = () => {
 
 const deleteCategory = (categoryId) => {
     const updatedCategories = getData("categories").filter(category => category.id != categoryId)
-    // console.log(updatedCategories)
     setData("categories", updatedCategories)
-    renderCategories(updatedCategories)
-    renderCategoryOptions(updatedCategories)
+    return updatedCategories
 }
 
 const ejecutionDeleteCategoryBtn = (categoryId) => {
@@ -157,6 +155,7 @@ const ejecutionDeleteCategoryBtn = (categoryId) => {
     // console.log(currentData)
     setData("operations", currentData)
     renderOperations(currentData)
+
 }
 
 //Edit Category
@@ -198,7 +197,6 @@ $("#editCategoryButton").addEventListener("click", (e) => {
     showElement(["#categories-container"])
     
 })
-
 
 
 /* OPERATIONS */
