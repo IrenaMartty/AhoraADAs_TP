@@ -26,10 +26,7 @@
                 </h1>
         </div>
         <div class="nav-menu" >
-                <ul class="nav-elemento pt-3 max-lg:hidden size-full flex flex-row">
-                    <li>
-                        <button class="nav-elemento mr-5 p-2 hover:bg-sky-600 rounded-md" id="mode">
-                            <i class="fa-regular fa-lightbulb"></i>                    
+                <ul class="nav-elemento pt-3 max-lg:hidden size-full flex flex-row">                  
                     </button>
                    </li>
                     <li>
@@ -87,13 +84,13 @@
 
                 <ul class="balance-ul">
                     <li class="balance-container-profit flex flex-row items-center justify-between mb-2 md:mb-4">Ganancias
-                        <span class="text-emerald-500" id="income">+$0.00</span>
+                        <span class="text-emerald-500" id="income"></span>
                     </li>
                     <li class="balance-container-cost flex flex-row items-center justify-between mb-2 md:mb-4">Gastos
-                        <span class="text-rose-500" id="cost">-$0.00</span>
+                        <span class="text-rose-500" id="cost"></span>
                     </li>
                     <li class="balance-container-total flex flex-row items-center justify-between mb-2 md:mb-4">Total
-                        <span class="font-bold" id="total">$0.00</span>
+                        <span class="font-bold" id="total"></span>
                     </li>
                 </ul>
 
@@ -103,8 +100,8 @@
             <section class="filtros-container bg-white p-5 rounded-md m-3 shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4 md:mb-8">
                     <p class="filtros-title text-xl text-left font-bold">Filtros</p>
-                    <button class="hide-filters-btn text-sm font-medium text-right">Ocultar Filtros</button>
-                    <button class="show-filters-btn text-sm font-medium text-right hidden">Mostrar filtros</button>
+                    <button class="p-2 hide-filters-btn text-sm font-medium text-right">Ocultar Filtros</button>
+                    <button class="p-2 show-filters-btn text-sm font-medium text-right hidden">Mostrar filtros</button>
                 </div>
 
                 <form class="filtros-form">
@@ -158,7 +155,7 @@
         <section class="operaciones-container bg-white rounded-md m-3 flex flex-col shadow-md w-full">
             <div class="flex flex-row items-center justify-between">
                 <p class="p-5 mb-10 operaciones-title text-xl text-left font-bold">Operaciones</p>
-                    <button class="btn-nuevaOperacion text-white text-right bg-sky-500 hover:bg-sky-600 m-5 mb-10 max-md:m-1 rounded-md p-3"
+                    <button class="btn-nuevaOperacion text-white text-right text-sm font-semibold bg-sky-500 hover:bg-sky-600 m-5 mb-10  rounded-md p-3"
                     id="btn-nuevaOperacion">+ Nueva Operación</button>
             </div>
             <div class="no-operations mt-10 flex items-center flex-col">
@@ -274,10 +271,10 @@
                     <div class="w-[100%] flex justify-between">
                         <input name="input-add-category" id="input-add-category" type="text"
                             class="w-[85%] p-[0.5rem] rounded-[0.3rem] border-inherit border-[0.1rem] hover:border-gray-400">
-                        <p class="text-red-600 hidden" id="errorNewCategory">Este campo es obligatorio</p>
+                        <p class="text-ri-600 hidden" id="errorNewCategory">Este campo es obligatorio</p>
             
                         <button type="button" id="btn-add-categories"
-                            class="h-[2.7rem] bg-[#55d8ac] px-6 ms-2 rounded-[0.3rem] text-white">Agregar</button>
+                            class="h-[2.7rem] bg-sky-500 hover:bg-sky-600 px-6 ms-2 rounded-[0.3rem] text-white">Agregar</button>
                     </div>
                 </form>
 
@@ -302,13 +299,13 @@
                 <h2 class="text-[3rem] mb-[1rem]">Editar categoría</h2>
                 <label for="editCategory" class="text-xl font-bold mt-5">Nombre</label>
                 <input type="text" id="editCategory" class="w-full p-[0.5rem] rounded-[0.3rem] border-inherit border-[0.1rem] hover:border-gray-400">
-                <p class="text-red-600 hidden" id="errorEditCategory">Este campo es obligatorio</p>
+                <p class="error-message-category-edit text-right text-rose-500 hidden"><i class="fa-solid fa-triangle-exclamation"></i> El nombre de categoría no puede estar vacío</p>
             </div>
             <div class="flex justify-end mt-7 md:mt-14">
                 <button id="EditCancelButton"
                     class="text-black bg-slate-100 hover:bg-slate-300 w-24 p-2 mt-5 rounded-md">Cancelar</button>
                 <button id="editCategoryButton"
-                    class="text-black bg-[#56d8ac] w-24 p-2 ml-7 mt-5 rounded-md hover:bg-[#31C594]" >Editar</button>
+                    class="text-white bg-sky-500 hover:bg-sky-600 w-24 p-2 ml-7 mt-5 rounded-md" disabled="true" >Editar</button>
             </div>
         </div>
     </section>
@@ -349,10 +346,10 @@
                 <table class="mt-5 w-full">
                     <thead>
                         <tr>
-                            <th class="">Categorías</th>
-                            <th class="">Ganancias</th>
-                            <th class="">Gastos</th>
-                            <th class="">Balance</th>
+                            <th class="text-left pb-6">Categorías</th>
+                            <th class="text-right pb-6">Ganancias</th>
+                            <th class="text-right pb-6">Gastos</th>
+                            <th class="text-right pb-6">Balance</th>
                         </tr>
                     </thead>
                     <tbody class="reports-total-by-category"></tbody>
@@ -365,10 +362,10 @@
                 <table class="mt-5 w-full">
                     <thead>
                         <tr>
-                            <th class="">Mes</th>
-                            <th class="">Ganancias</th>
-                            <th class="">Gastos</th>
-                            <th class="">Balance</th>
+                            <th class="text-left pb-6">Mes</th>
+                            <th class="text-right pb-6">Ganancias</th>
+                            <th class="text-right pb-6">Gastos</th>
+                            <th class="text-right pb-6">Balance</th>
                         </tr>
                     </thead>
                     <tbody class="reports-total-by-months"></tbody>

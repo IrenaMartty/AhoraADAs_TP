@@ -104,9 +104,9 @@ const renderCategories = (categories) => {
 }
 
 const renderCategoryOptions = (categories) => {
-     $("#select-category").innerHTML = "";
-     $("#form-select-category").innerHTML = "";
-     $("#form-select-category").innerHTML += `<option value="Todas">Todas</option>`;
+     $("#select-category").innerHTML = ""
+     $("#form-select-category").innerHTML = ""
+     $("#form-select-category").innerHTML += `<option value="Todas">Todas</option>`
 
  
     for (const category of categories) {
@@ -203,7 +203,7 @@ $("#editCategoryButton").addEventListener("click", (e) => {
 
 //  Add New Operation
 
-// Get operation
+// Get operations
 
 const getOperationById = (operationId) => getOperations().find(({id}) => id === operationId)
 
@@ -219,40 +219,7 @@ const saveOperation = (operationId) => {
     }
 }
 
-const showOperations = (arrayOperations) => {
-    $(".tbody-info-render").innerHTML = "" 
-        if (!(arrayOperations.length > 0)) {
-            $(".operaciones-container").classList.remove("hidden")
-            $(".operaciones-table-container").classList.add("hidden")
-         }
-
-    const categoryName = (idCategory) => {
-        for(const category of getData("categories")){
-          if(idCategory === category.id){
-            return(category.name)
-          }
-        }
-      }
-
-    for (const operation of arrayOperations) {    
-        $(".tbody-info-render").innerHTML +=
-
-   `<tr>
-        <td class="text-center border-r-6 p-3max-w-[150px]">${operation.description}</td>
-        <td class="text-center border-r-6 p-3">
-            <p class="bg-slate-300 text-center rounded-md">${categorySelected.name}</p>
-         </td>
-        <td class="text-center border-r-6 p-3">${operation.day}</td>
-        <td class="text-center border-r-6 p-3" id="num-amount">${operation.amount}</td>
-        <td class="p-3 flex flex-col">
-            <button class="bg-slate-300 text-center mb-1 border-r-6 rounded-md" >Editar</button>
-            <button class="bg-slate-300 text-center border-r-6 rounded-md" '${operation.description}')">Eliminar</button>
-        </td>
-    <tr class="m-28 border-2 border-slate-300"></tr> 
-    `
-  }
-}
-// Render Operation
+// Render Operations
 
 const renderOperations = (operations) => {
     cleanContainer(".tbody-info-render")
@@ -262,12 +229,12 @@ const renderOperations = (operations) => {
     for (const operation of operations) {
         const categorySelected = getData("categories").find(category => category.id === operation.category)
         const formattedAmount = operation.type === "ganancia" ? `+$${operation.amount}` : `-$${operation.amount}`
-        const amountColor = operation.type === "ganancia" ? "text-emerald-500" : "text-rose-500";
+        const amountColor = operation.type === "ganancia" ? "text-emerald-500" : "text-rose-500"
 // console.log (categorySelected)
         $(".tbody-info-render").innerHTML += `
         <tr class="">
             <td class="sm:pr-6 text-left">${operation.description}</td>
-            <td class="px-3 py-1 text-s text-emerald-600 bg-emerald-50 rounded text-left max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
+            <td class="px-3 py-1 text-s text-emerald-600 text-left font-bold max-md:hidden">${categorySelected ? categorySelected.name : ''}</td>
             <td class="sm:pr-6 text-left max-md:hidden">${operation.day}</td>
             <td class="sm:pr-6 text-left ${amountColor}">${formattedAmount}</td>
             <td>
@@ -331,15 +298,13 @@ const updateOperation = (operationId) => {
     updateData(null, updatedOperations)
 }
 
-const handleEditOperation = () => {
+const editOperation = () => {
     const operationId = $("#edit-operation").getAttribute("data-id")
     const { description, amount, type, category, day } = getOperationDetails()
 
     if (description && !isNaN(amount) && type && category && day) {
         updateOperation(operationId)
-    } else {
-        showElement(["#error-message"])
-    }
+    } 
 }
 
 // Delete operation
@@ -384,16 +349,8 @@ const validation = (field) => {
         hideElement([".error-message-monto"])
     }
     break
-    // case "dateValidation":
-
-    // if (!dateValidation) {
-    //     showElement([".error-message-date"])
-    // } else {
-    //     hideElement([".error-message-date"])
-    // }
-    // break
-    // default: alert("Error")
 }
+
 if (validationPass) {
     $("#btn-add-newOp").removeAttribute("disabled")
 
@@ -403,22 +360,44 @@ if (validationPass) {
 
 }
 
+const editCategoryValidation = (edit) => {
+    const editCategoryValidation = $("#editCategory").value.trim()
+    let editValidationPass = editCategoryValidation !== ""
+    if (editCategoryValidation === "") {
+        showElement([".error-message-category-edit"])
+    } else {
+        hideElement([".error-message-category-edit"])
+    }
+
+    if (editValidationPass) {
+        $("#editCategoryButton").removeAttribute("disabled")
+    
+    } else {   
+         $("#editCategoryButton").setAttribute("disabled", true)
+        }
+
+}
+
+
 
 /* BALANCE CALCULATION */
 
 const operations = getData("operations")
+const formatAmount = (amount) => {
+    return `$${Math.abs(amount)}`;
+}
 
 // Total income
 const calculateIncome = () => {
     let acc = 0
     for (const operation of operations) {
         if (operation.type === "ganancia") {
-            acc += operation.amount;
+            acc += operation.amount
         }
         
     }
     
-    $("#income").innerText = `+$${Math.abs(acc)}`
+    $("#income").innerText = formatAmount(acc)
     return acc
 }
 
@@ -430,8 +409,8 @@ const calculateCost = () => {
             acc -= operation.amount
         }
     }
-    // console.log("Total Cost:", acc);
-    $("#cost").innerText = `-$${Math.abs(acc)}`
+    // console.log("Total Cost:", acc)
+    $("#cost").innerText = formatAmount(acc)
     return acc
 }
 
@@ -440,67 +419,75 @@ const totalCalc = () => {{}
     const income = calculateIncome() 
     const cost = calculateCost() 
     const total = income + cost
-    // console.log("Income:", income);
+    // console.log("Income:", income)
     // console.log("Cost:", cost)
     // console.log("total:", total)
    
-    $("#total").innerText = `+$${Math.abs(total)}`
+    $("#total").innerText = formatAmount(total)
+
+    const totalElement = $("#total");
+    if (total >= 0) {
+        totalElement.classList.remove("text-rose-500");
+        totalElement.classList.add("text-emerald-500");
+    } else {
+        totalElement.classList.remove("text-emerald-500");
+        totalElement.classList.add("text-rose-500");
+    }
+
+
     return total
 }
 
 // FILTERS
 
-// // Filter by type
-// const filterType = (operations, operationType) => operations.filter(({type}) => type === operationType)
+const applyFilters = () => {
+    const selectType = $("#form-select-type").value
+    const selectCategory = $("#form-select-category").value
+    const selectedDate = new Date($("#pick-day").value)
+    const selectedOption = $("#form-select-order").value
 
-// // Filter by category
-// const filterCategory = (operations, operationCategory) => operations.filter(({category}) => category === operationCategory)
+    let filteredData = getData("operations")
 
-// // Filter by date
-// const filterDate = (operations, operationDate) => operations.filter(({day}) => new Date(day).getTime() >= operationDate.getTime())
+    // Filter by type
+    if (selectType !== "Todos") {
+        filteredData = filteredData.filter(operation => operation.type === selectType)
+    }
 
-// // Filter by order
-// // date
-// const byDate = (operations, order) => {
-//     return [...operations].sort((a, b) => {
-//         const dateA = new Date(a.day).getTime();
-//         const dateB = new Date(b.day).getTime();
-//         return order === 'recent' ? dateB - dateA : dateA - dateB;
-//     });
-// }
-// // amount
-// const byAmount = (operations, order) => {
-//     return [...operations].sort((a, b) => {
-//         return order === 'max' ? b.amount - a.amount : a.amount - b.amount
-//     })
-// }
+    // Filter by category
+    if (selectCategory !== "Todas") {
+        filteredData = filteredData.filter(operation => operation.category === selectCategory)
+    }
 
-// // alphabet
-// const byAlphabet = (operations, order) => {
-//     return [...operations].sort((a, b) => {
-//         const descriptionA = a.description.toLowerCase()
-//         const descriptionB = b.description.toLowerCase()
-//         return order === 'aZ' ? descriptionA.localeCompare(descriptionB) : descriptionB.localeCompare(descriptionA)
-//     })
-// }
+    // Filter by date
+    filteredData = filteredData.filter(operation => {
+        const operationDate = new Date(operation.day)
+        return operationDate >= selectedDate && operationDate <= new Date()
+    })
 
-// const allFilters = () => {
-//     const typeFilter = $("#form-select-type").value
-//     const categoryFilter = $("#form-select-category").value
-//     const dateFilter = new Date($("#pick-day").value)
-//     const orderFilter = $("#form-select-order").value
+    // Apply sorting
+    switch (selectedOption) {
+        case "Mas reciente":
+            filteredData = filteredData.sort((a, b) => new Date(b.day) - new Date(a.day))
+            break
+        case "Menos reciente":
+            filteredData = filteredData.sort((a, b) => new Date(a.day) - new Date(b.day))            
+            break
+        case "Mayor monto":
+            filteredData = filteredData.sort((a, b) => b.amount - a.amount)
+            break
+        case "Menor monto":
+            filteredData = filteredData.sort((a, b) => a.amount - b.amount)
+            break
+        case "A-Z":
+            filteredData = filteredData.sort((a, b) => a.description.localeCompare(b.description))
+            break
+        case "Z-A":
+            filteredData = filteredData.sort((a, b) => b.description.localeCompare(a.description))
+            break
+    }
 
-//     let filteredOperations = [...operations]
-
-//     if (typeFilter !== "Todos") {
-//         filteredOperations = filterType(filteredOperations, typeFilter);
-//     }
-
-
-//     renderOperations(filteredOperations)
-    
-// }
-
+    renderOperations(filteredData)
+}
 
 /* REPORTS */
 
@@ -512,8 +499,8 @@ const totalCalc = () => {{}
 
 const totalbyCategory = () => {
     return operations.reduce((acc, operation) => {
-        const { category, amount, type } = operation;
-        const operationValue = type === "ganancia" ? amount : -amount;
+        const { category, amount, type } = operation
+        const operationValue = type === "ganancia" ? amount : -amount
 
         if (!acc[category]) {
             acc[category] = {
@@ -553,20 +540,7 @@ return {categoryName, highestAmount}
 // By Month
 // Get Month
 const getMonthAndYear = (monthNum, year) => {
-    const allMonths = [
-        "Enero", 
-        "Febrero", 
-        "Marzo", 
-        "Abril",
-        "Mayo", 
-        "Junio", 
-        "Julio", 
-        "Agosto",
-        "Septiembre", 
-        "Octubre", 
-        "Noviembre", 
-        "Diciembre",
-    ]
+    const allMonths = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",]
     if (monthNum >= 0 && monthNum <= 11) {
         return `${allMonths[monthNum]}/${year}`
 }
@@ -626,10 +600,10 @@ const monthWithHighestIncome = (property) => {
 const renderCategorySum = (title, categoryType, amount) => {
     const{categoryName, highestAmount} = categoryWithHighestIncome(categoryType)
     $(".summary").innerHTML += `
-    <li class="my-6 md:flex md:justify-between">
-    <p class="mb-2 md:mb-0">${title}</p>
+    <li class="my-5 md:flex md:justify-between">
+    <p class="mb-2 font-medium md:mb-0">${title}</p>
     <div class="flex justify-between md:w-1/3">
-        <span class="px-3 py-1 rounded text-emerald-600 bg-emerald-50">${categoryName}</span>
+        <span class="py-1 text-emerald-600 font-bold">${categoryName}</span>
         <span class="font-medium ${amount < 0 ? 'text-rose-500' : amount > 0 ? 'text-emerald-500' : ''}">${amount > 0 ? '+' : amount < 0 ? '-' : ''}$${Math.abs(highestAmount)}</span>
     </div>
     </li>`
@@ -638,7 +612,7 @@ const renderCategorySum = (title, categoryType, amount) => {
 const renderMonthSum = (title, property, amount) => {
     const {highestMonth, highestAmount} = monthWithHighestIncome(property)
     $(".summary").innerHTML += `
-    <li class="my-6 md:flex md:justify-between">
+    <li class="my-5 md:flex md:justify-between">
         <p class="mb-2 font-medium md:mb-0">${title}</p>
         <div class="flex justify-between md:w-1/3">
             <span>${getMonthAndYear(highestMonth.month, highestMonth.year)}</span>
@@ -673,12 +647,14 @@ const renderTotalbyCategory = () => {
     cleanContainer(".reports-total-by-category")
     for (const category in totalAmountsByCategory) {
         const { totalIncome, totalCost, totalBalance } = totalAmountsByCategory[category]
+        const balanceColor = totalBalance > 0 ? "text-emerald-500" : "text-rose-500"
+
         $(".reports-total-by-category").innerHTML += `
             <tr>
-                <td class="pr-4 pb-6 font-medium md:pr-0">${getCategoryNameById(category)}</td>
-                <td class="pr-4 pb-6 text-right text-green-500 md:pr-0">+$${totalIncome}</td>
-                <td class="pr-4 pb-6 text-right text-red-500 md:pr-0">-$${totalCost}</td>
-                <td class="pb-6 text-right">$${totalBalance}</td>
+                <td class="pr-4 pb-5 font-medium md:pr-0">${getCategoryNameById(category)}</td>
+                <td class="pr-4 pb-5 text-green-500 text-right md:pr-0">$${totalIncome}</td>
+                <td class="pr-4 pb-5 text-rose-500 text-right md:pr-0">-$${totalCost}</td>
+                <td class="pb-5 text-right font-bold ${balanceColor}">${totalBalance}</td>
             </tr>
         `
     }
@@ -693,12 +669,13 @@ const renderTotalbyMonth = () => {
     for (const year in totalAmountsByMonth) {
         for (const month in totalAmountsByMonth[year]) {
             const { totalIncome, totalCost, totalBalance } = totalAmountsByMonth[year][month]
+            const balanceColor = totalBalance > 0 ? "text-emerald-500" : "text-rose-500";
             $(".reports-total-by-months").innerHTML += `
                 <tr>
-                    <td class="pr-4 pb-6 font-medium md:pr-0">${getMonthAndYear(parseInt(month), parseInt(year))}</td>
-                    <td class="pr-4 pb-6 text-right text-green-500 md:pr-0">+$${totalIncome}</td>
-                    <td class="pr-4 pb-6 text-right text-red-500 md:pr-0">-$${totalCost}</td>
-                    <td class="pb-6 text-right">$${totalBalance}</td>
+                    <td class="pr-4 pb-5 font-medium md:pr-0">${getMonthAndYear(parseInt(month), parseInt(year))}</td>
+                    <td class="pr-4 pb-5 text-green-500 text-right md:pr-0">+$${totalIncome}</td>
+                    <td class="pr-4 pb-5 text-rose-500 text-right md:pr-0">-$${totalCost}</td>
+                    <td class="pb-5 text-right font-bold ${balanceColor}">${totalBalance}</td>
                 </tr>`
         }
     }
@@ -706,8 +683,8 @@ const renderTotalbyMonth = () => {
 }
 
 const reportUpdate = () => {
-    const presentIncome = operations.some(({ type }) => type === "ganancia");
-    const presentCost = operations.some(({ type }) => type === "gasto");
+    const presentIncome = operations.some(({ type }) => type === "ganancia")
+    const presentCost = operations.some(({ type }) => type === "gasto")
 
     if (presentIncome && presentCost) {
         showElement([".show-reports"])
@@ -720,9 +697,6 @@ const reportUpdate = () => {
         showElement([".no-reports"])
     }
 }
-
-
-
 
 /* EVENTS */
 
@@ -737,7 +711,6 @@ const initializeApp = () => {
 $("#income").innerText = calculateIncome()
 $("#cost").innerText = calculateCost()
 $("#total").innerText = totalCalc()
-
 
 
 // Navigation Buttons - Header buttons
@@ -844,82 +817,10 @@ $(".btn-confirm-edit").addEventListener("click", (e) => {
 
 /* FILTERS */
 
-
-    $(".form-select-type").addEventListener("input", (e) => {
-        const selectType = e.target.value
-        if (selectType === "Todos") {
-            
-            renderOperations(getData("operations"))
-        } else {
-        const currentData = getData("operations")
-        const filterType = currentData.filter(operation => operation.type === selectType)
-        renderOperations(filterType)
-        }
-     })
-
-     $(".form-select-category").addEventListener("input", (e) => {
-        const selectCategory = e.target.value
-        if (selectCategory === "Todas") {
-            
-            renderOperations(getData("operations"))
-        } else {
-        const currentData = getData("operations")
-        const filterCategory = currentData.filter(operation => operation.category === selectCategory)
-        renderOperations(filterCategory)
-        }
-     })
-    
-     $("#pick-day").addEventListener("input", (e) => {
-        e.preventDefault()
-        const selectedDate = new Date(e.target.value)
-        const currentDate = new Date()
-        // console.log("Selected Date:", selectedDate)
-        
-        const currentData = getData("operations")
-    
-        const filterDate= currentData.filter(operation => {
-            const operationDate = new Date(operation.day)
-            // console.log("Operation Date:", operationDate);
-
-            return operationDate >= selectedDate && operationDate <= currentDate
-        })    
-
-renderOperations(filterDate)
-     })
-
-     $("#form-select-order").addEventListener("input", (e) => {
-    
-   const selectedOption = e.target.value;
-   const currentData = getData("operations")
-
-   let filterOperations
-   switch (selectedOption) {
-       case "Mas reciente":
-        filterOperations = currentData.sort((a, b) => new Date(a.day) - new Date(b.day))
-           break;
-       case "Menos reciente":
-        filterOperations = currentData.sort((a, b) => new Date(b.day) - new Date(a.day))
-           break;
-       case "Mayor monto":
-        filterOperations = currentData.sort((a, b) => b.amount - a.amount)
-           break;
-       case "Menor monto":
-        filterOperations = currentData.sort((a, b) => a.amount - b.amount)
-           break;
-       case "A-Z":
-        filterOperations = currentData.sort((a, b) => a.description.localeCompare(b.description))
-           break;
-       case "Z-A":
-        filterOperations = currentData.sort((a, b) => b.description.localeCompare(a.description))
-           break;
-       default:
-        filterOperations = currentData
-   }
-
-   renderOperations(filterOperations)
-
-
-}) 
+$("#form-select-type").addEventListener("input", applyFilters)
+$("#form-select-category").addEventListener("input", applyFilters)
+$("#pick-day").addEventListener("input", applyFilters)
+$("#form-select-order").addEventListener("input", applyFilters)
 
     $(".hide-filters-btn").addEventListener("click", () => {
         hideElement([".filtros-form"])
@@ -963,47 +864,19 @@ renderOperations(filterDate)
      })
 
     }) 
-// cancel edit
+
+    // Cancel edit
     $("#EditCancelButton").addEventListener("click", () => {
         showElement([".categories-container"])
         hideElement(["#containerEditCategory"])
     }) 
 
-
-// edit confirmation button
-    
-     // Delete category
-
-// const deleteCategoryButtons = document.querySelectorAll(".btn-delete-category")
-
-//      deleteCategoryButtons.forEach(button => {
-//          button.addEventListener("click", () => {
-//             showElement(["#removeCategoryConfirmation"])
-
-//      })
-//     }) 
-//     $(".btn-cancel-delete").addEventListener("click", () => {
-//         hideElement(["#removeCategoryConfirmation"])
-//     }) 
-
-
-//     $("#btn-remove-categories").addEventListener("click", () => {
-//         console.log("Button clicked!")
-//         const categoryIdToDelete = $("#btn-remove-categories").getAttribute("data-category-id")
-//         if (categoryIdToDelete) {
-//             deleteCategory(categoryIdToDelete)
-//             renderCategories(deleteCategory(categoryId))
-//     setData("categories", currentData)
-//             hideElement(["#removeOperationConfirmation"])
-//             window.location.reload()
-//         }
-//     })
-
     // Form validations
 
     $("#input-description-text").addEventListener("blur", () => validation("descriptionValidation"))
     $("#input-amount").addEventListener("blur", () => validation("amountValidation"))
-    // $("#op-input-date").addEventListener("blur", () => validation("dateValidation"))
+
+    $("#editCategory").addEventListener("blur", editCategoryValidation)    
 
 }
 
