@@ -20,29 +20,29 @@
 <header class="flex flex-col">
     <nav class="nav-bar bg-sky-500 p-6 text-white flex justify-between max-lg:p-2">
         <div class="logo-nav-bar">
-                <h1 class="logo-titulo text-white font-medium text-[36px] max-lg:text-[30px]">
+                <h1 class="logo-title text-white font-medium text-[36px] max-lg:text-[30px]">
                     <img src="./Images/logo-1.png" alt="logo" class="fa-solid fa-wallet pb-2 mr-2 w-12 max-md:w-7">
                     AhorrADAs
                 </h1>
         </div>
         <div class="nav-menu" >
-                <ul class="nav-elemento pt-3 max-lg:hidden size-full flex flex-row">                  
+                <ul class="nav-element pt-3 max-lg:hidden size-full flex flex-row">                  
                     </button>
                    </li>
                     <li>
-                    <button class="nav-elemento mr-5 p-2 hover:bg-sky-600 rounded-md" id="balance-sheet">
+                    <button class="nav-element mr-5 p-2 hover:bg-sky-600 rounded-md" id="balance-sheet">
                         <i class="fa-solid fa-chart-line mr-2"></i>
                         Balance
                 </button>
                </li>
                 <li>
-                    <button class="nav-elemento mr-5 p-2 hover:bg-sky-600 rounded-md" id="categorias-sheet">
+                    <button class="nav-element mr-5 p-2 hover:bg-sky-600 rounded-md" id="categorias-sheet">
                         <i class="fa-solid fa-tag mr-2"></i>
                         Categorías
                     </button>
                 </li>
                 <li>
-                    <button href="" class="nav-elemento mr-5 p-2 hover:bg-sky-600 rounded-md" id="reportes-sheet">
+                    <button href="" class="nav-element mr-5 p-2 hover:bg-sky-600 rounded-md" id="reportes-sheet">
                         <i class="fa-solid fa-chart-pie mr-2"></i>
                         Reportes
                     </button>
@@ -50,21 +50,21 @@
             </ul>
         </div>
         <!-- Dropdown menu -->
-            <button class="nav-elemento menu-hamburgesa lg:hidden max-lg:p-2 hover:bg-sky-600 rounded-md">
+            <button class="nav-element menu-hamburgesa lg:hidden max-lg:p-2 hover:bg-sky-600 rounded-md">
                 <i class="fa-solid fa-bars"></i>
                 <i class="fa-solid fa-xmark hidden"></i>
             </button>  
     </nav>
     <div class="dropdown-menu drop-shadow-md bg-white lg:hidden flex flex-col justify-items-start hidden">
-        <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="balance-sheet-drop">
+        <button class="nav-element w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="balance-sheet-drop">
             <i class="fa-solid fa-chart-line mr-2"></i>
             Balance
         </button>
-        <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="categorias-sheet-drop">
+        <button class="nav-element w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="categorias-sheet-drop">
         <i class="fa-solid fa-tag mr-2"></i>
         Categorías
         </button>
-        <button class="nav-elemento w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="reportes-sheet-drop">
+        <button class="nav-element w-full pr-2 text-slate-500 hover:bg-slate-200 hover:text-black text-left p-2" id="reportes-sheet-drop">
             <i class="fa-solid fa-chart-pie mr-2"></i>
             Reportes
         </button>
@@ -79,7 +79,6 @@
 
             <!-- Balance -->
             <section class="balance-container bg-white p-5 rounded-md m-3 shadow-md">
-                <a name="balance"></a>
                 <p class="balance-title text-xl font-bold mb-10">Balance</p>
 
                 <ul class="balance-ul">
@@ -97,17 +96,17 @@
             </section>
 
             <!-- Filters -->
-            <section class="filtros-container bg-white p-5 rounded-md m-3 shadow-md">
+            <section class="filters-container bg-white p-5 rounded-md m-3 shadow-md">
                 <div class="flex flex-row items-center justify-between mb-4 md:mb-8">
                     <p class="filtros-title text-xl text-left font-bold">Filtros</p>
                     <button class="p-2 hide-filters-btn text-sm font-medium text-right">Ocultar Filtros</button>
                     <button class="p-2 show-filters-btn text-sm font-medium text-right hidden">Mostrar filtros</button>
                 </div>
 
-                <form class="filtros-form">
+                <form class="filters-form">
 
-                    <ul class="filtros-form-list">
-                        <li class="filtros-section-type mb-2 md:mb-4 flex flex-col flex-col ">
+                    <ul class="filters-form-list">
+                        <li class="filters-section-type mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-type">Tipo</label>
                             <select id="form-select-type" class="form-select-type p-2 border-slate-200 border-2 rounded-md">
                                 <option value="Todos">Todos</option>
@@ -116,19 +115,19 @@
                             </select>
                         </li>
 
-                        <li class="filtros-section-category mb-2 md:mb-4 flex flex-col flex-col ">
+                        <li class="filters-section-category mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-category">Categoria</label>
                             <select id="form-select-category" class="form-select-category p-2 border-slate-200 border-2  rounded-md ">
                                
                             </select>
                         </li>
 
-                        <li class="filtros-section-day mb-2 md:mb-4 flex flex-col flex-col ">
+                        <li class="filters-section-day mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="pick-day">Desde</label>
                             <input type="date" id="pick-day" class="pick-day p-2 border-slate-200 border-2  rounded-md ">
                         </li>
 
-                        <li class="filtros-section-order mb-2 md:mb-4 flex flex-col flex-col ">
+                        <li class="filters-section-order mb-2 md:mb-4 flex flex-col flex-col ">
                             <label for="form-select-order">Ordenar por</label>
                             <select id="form-select-order" class="form-select-order p-2 border-slate-200 border-2 rounded-md ">
                                 <option>Mas reciente</option>
@@ -148,15 +147,13 @@
                 </div>
             </section>
         </div>
-<!-- section class="section-filtros-balance-operaciones p-10 rounded-md flex w-full flex px-40 max-lg:px-10">
-    <div class="size-full flex max-lg:flex-col max-lg:w-full"> -->
     
     <!-- Operations -->
-        <section class="operaciones-container bg-white rounded-md m-3 flex flex-col shadow-md w-full">
-            <div class="flex flex-row items-center justify-between">
-                <p class="p-5 mb-10 operaciones-title text-xl text-left font-bold">Operaciones</p>
-                    <button class="btn-nuevaOperacion text-white text-right text-sm font-semibold bg-sky-500 hover:bg-sky-600 m-5 mb-10  rounded-md p-3"
-                    id="btn-nuevaOperacion">+ Nueva Operación</button>
+        <section class="operations-container bg-white rounded-md m-3 flex-1 flex-col shadow-md w-full">
+            <div class="flex flex-row items-center justify-between max-md:flex-col max-md:items-start">
+                <p class="p-5 mb-10 operations-title text-xl text-left font-bold max-md:m-1 max-md:">Operaciones</p>
+                    <button class="btn-newOperation text-white text-right text-sm font-semibold bg-sky-500 hover:bg-sky-600 m-5 mb-10 max-md:m-1 max-md:mx-6 rounded-md p-3 "
+                    id="btn-newOperation">+ Nueva Operación</button>
             </div>
             <div class="no-operations mt-10 flex items-center flex-col">
                 <figure class="flex justify-center p-6">
@@ -167,7 +164,7 @@
             </div>
 
              <!-- Operations Table Render-->
-            <div class="operaciones-table-container mt-5 px-6 flex hidden">
+            <div class="operations-table-container mt-5 px-6 flex hidden">
                 <table class="table-operationsRender w-full ">
                     <thead>
                         <tr class="text-left"> 
@@ -257,9 +254,6 @@
 
         <!--Add category-->
         <section id="categories-container" class="categories-container bg-white p-5 mt-20 rounded-md m-3 sm:w-3/4 hidden">
-
-            <a name="categoria"></a>
-
             <div class="">
                 <h2 class="text-[3rem] mb-[1rem]">Categorías</h2>
 
@@ -326,9 +320,7 @@
     </section>
 
 <!-- Third Screen(Reportes) -->
-<section class="reports-container bg-white sm:w-3/4 p-5 mt-20 rounded-md m-3 hidden">
-    <a name="reportes"></a>
-    
+<section class="reports-container bg-white sm:w-3/4 p-5 mt-20 rounded-md m-3 hidden">    
         <h2 class="text-[3rem] mb-[1rem]= ">Reportes</h2>
         
    
@@ -336,11 +328,11 @@
     
 <!--Tabla de reportes-->
     <div class="show-reports flex flex-col">
-        <div class=" m-10">
+        <div class="my-10">
             <h4 class="text-xl font-bold">Resume</h4>
             <ul class="summary"></ul>
         </div>
-        <div class="m-10">
+        <div class="my-10">
             <h4 class="text-xl font-bold">Totals by category</h4>
             <div class="">
                 <table class="mt-5 w-full">
@@ -356,7 +348,7 @@
                 </table>
             </div>  
         </div>
-        <div class="m-10">
+        <div class="my-10">
             <h4 class="text-xl font-bold">Totals by month</h4>
             <div class="">
                 <table class="mt-5 w-full">
